@@ -39,15 +39,15 @@ final class db {
 			self::connect();
 		}
 
-		if (!empty($params)) {
-			try {
+		try {
+			if (!empty($params)) {
 				$res = self::$conn->prepare($sql);
 				return $res->execute($params);
-			} catch (Exception $e) {
-				trigger_error('MySQL query error: ' . $e->getMessage());
+			} else {
+				return self::$conn->query($sql);
 			}
-		} else {
-			return self::$conn->query($sql);
+		} catch (Exception $e) {
+			trigger_error('MySQL query error: ' . $e->getMessage() . ' - Query: ' . $sql);
 		}
 
 		return false;
