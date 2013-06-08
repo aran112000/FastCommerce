@@ -37,15 +37,15 @@ final class get {
 
 		if (!empty($key)) {
 			if (isset(self::$conf_file[$block][$key])) {
-				return trim(self::$conf_file[$block][$key]);
+				return self::$conf_file[$block][$key];
 			}
 		} else {
 			if (isset(self::$conf_file[$block])) {
-				return trim(self::$conf_file[$block]);
+				return self::$conf_file[$block];
 			}
 		}
 
-		return trim($fallback_value);
+		return $fallback_value;
 	}
 
 	/**
