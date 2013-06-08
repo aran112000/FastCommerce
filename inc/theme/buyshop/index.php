@@ -23,6 +23,7 @@
 		<p>
 			<?
 			$prod = new prod();
+			echo '<p><pre>' . print_r($prod->do_retrieve_from_id(array(), 1), true) . '</pre></p>'."\n";
 			?>
 		</p>
 	</aside>
