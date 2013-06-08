@@ -9,7 +9,7 @@ final class core {
 	 *
 	 * @var array
 	 */
-	private $page = array();
+	public $page = array();
 
 	/**
 	 * Constructor
@@ -18,8 +18,6 @@ final class core {
 		$this->di = new di();
 		if (ajax) {
 			// TODO - Create ajax handler in PHP & JS
-		} else {
-			$this->__controller();
 		}
 	}
 
@@ -51,6 +49,7 @@ final class core {
 	 * @throws Exception
 	 */
 	public function get_theme() {
+		$this->__controller();
 		$theme = get::setting('theme', 'buyshop');
 		if (!empty($theme)) {
 			if (is_readable(root . '/inc/theme/' . $theme . '/index.php')) {
@@ -80,7 +79,16 @@ final class core {
 		$html .= '<html>'."\n";
 		$html .= '<head>'."\n";
 		$html .= "\t".'<link rel="stylesheet" type="text/css" href="' . $this->di->theme_class->get_path('/css/style.css') . '" />'."\n";
-		$html .= "\t".'<title>My E-commerce Store</title>'."\n"; // TODO
+		$html .= "\t".'<title>' . (isset($this->page['title_tag']) ? $this->page['title_tag'] : '') . '</title>'."\n";
+		if (isset($this->page['meta_description']) && !empty($this->page['meta_description'])) {
+			$html .= "\t".'<meta name="description" content="' . $this->page['meta_description'] . '" />'."\n";
+		}
+		$html .= "\t".'<meta name="robots" content="' . $this->page['robots'] . '" />'."\n";
+		if (isset($this->page['social_meta_tags']) && !empty($this->page['social_meta_tags'])) {
+			foreach ($this->page['social_meta_tags'] as $tag) {
+				$html .= "\t".$tag."\n";
+			}
+		}
 		$html .= '</head>'."\n";
 		$html .= '<body>'."\n";
 
