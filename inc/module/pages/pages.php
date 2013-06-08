@@ -29,9 +29,10 @@ final class pages extends core_module {
 		if ($path_count == 1 && empty($path_parts[0])) {
 			$params = array('pid' => 1, 'fn' => '');
 		} else {
-			$params = array('pid' => $path_parts[0], 'fn' => $path_parts[1]);
+			$params = array('pid' => (isset($path_parts[0]) ? $path_parts[0] : 0), 'fn' => (isset($path_parts[1]) ? $path_parts[1] : ''));
 		}
-		if (!$this->current = $this->do_retrieve(array(), array('where' => 'pid=:pid AND fn=:fn', 'params' => $params, 'limit' => 1))) {
+		$params['direct_link'] = uri;
+		if (!$this->current = $this->do_retrieve(array(), array('where' => '(pid=:pid AND fn=:fn) OR (direct_link = :direct_link)', 'params' => $params, 'limit' => 1))) {
 			run::header_redir('/404', 404);
 		}
 
@@ -51,11 +52,14 @@ final class pages extends core_module {
 			$this->di->page = new page();
 		}
 		$pages = $this->di->page->do_retrieve(array(), array($options));
-		if (!empty($pages)) {
+		$pnum = count($pages);
+		if ($pnum > 0) {
+			$i = 0;
 			$html .= '<nav id="' . $id . '">'."\n";
 			$html .= '<ul>'."\n";
-			foreach ($pages as $page) {
-				$html .= '<li><a href="' . $page->get_url() . '" title="' . $page->title . '"><span>' . (!empty($page->nav_title) ? $page->nav_title : $page->title) . '</span></a></li>'."\n";
+			foreach ($pages as $page) { $i++;
+				$url = $page->get_url();
+				$html .= '<li' . ($i == $pnum ? ' class="last"' : '') . '><a href="' . $url . '" title="' . $page->title . '"' . ($url == uri ? ' class="sel"' : '') . '><span>' . (!empty($page->nav_title) ? $page->nav_title : $page->title) . '</span></a></li>'."\n";
 			}
 			$html .= '</ul>'."\n";
 			$html .= '</nav>'."\n";
