@@ -3,6 +3,7 @@
 define('ip', (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '000.000.000.000'));
 define('root', $_SERVER['DOCUMENT_ROOT']);
 define('host', (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'Unknown host'));
+define('uri', (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/'));
 define('user_agent', (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'Unknown User Agent'));
 define('debug', (strstr(ip, '127.0.0.1')));
 define('ajax', (isset($_REQUEST['act']) && !empty($_REQUEST['act'])));
