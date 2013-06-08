@@ -1,10 +1,4 @@
 <?
-/*
- * TODOs
- *  - More core into DI when loaded for any items such as SEO tags can go directly in from any object or module
- * */
-
-
 /**
  * Class core
  */
