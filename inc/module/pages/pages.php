@@ -40,6 +40,11 @@ final class pages extends core_module {
 		return $this->get_view('default');
 	}
 
+	/**
+	 * @param       $id
+	 * @param array $options
+	 * @return string
+	 */
 	public function get_nav($id, array $options = array()) {
 		$html = '';
 		if (!isset($this->di->page)) {
