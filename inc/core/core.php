@@ -21,9 +21,7 @@ final class core {
 	 * Constructor
 	 */
 	public function __construct() {
-		if (!isset($this->di)) {
-			$this->di = new di();
-		}
+		$this->di = new di();
 		if (ajax) {
 			// TODO - Create ajax handler in PHP & JS
 		} else {
@@ -42,15 +40,15 @@ final class core {
 
 			if (is_readable(root . '/inc/module/' . $module_name . '/' . $module_name . '.php')) {
 				// TODO test this block
-				${$module_name} = new $module_name($module_name);
-				if (get::method_exists(${$module_name}, '__controller')) {
-					$this->page['body'] = ${$module_name}->__controller($url_parts, count($url_parts));
+				$this->di->$module_name = new $module_name($module_name);
+				if (get::method_exists($this->di->$module_name, '__controller')) {
+					$this->page['body'] = $this->di->$module_name->__controller($url_parts, count($url_parts));
 				} else {
 					trigger_error('No controller found for module: ' . $module_name);
 				}
 			} else {
-				$page = new page('page');
-				$this->page['body'] = $page->__controller($url_parts, count($url_parts));
+				$this->di->page = new page('page');
+				$this->page['body'] = $this->di->page->__controller($url_parts, count($url_parts));
 			}
 		}
 	}
