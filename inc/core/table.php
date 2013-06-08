@@ -58,6 +58,7 @@ class table {
 
 		$options['where'][] = '`' . key($this->fields) . '` = :id';
 		$options['params']['id'] = (int) $id;
+		$options['limit'] = 1;
 
 		return $this->do_retrieve($fields, $options);
 	}
@@ -110,7 +111,7 @@ class table {
 		}
 
 		$tres = db::query($sql, $params);
-		if ($tres && db::num($tres) == 1) {
+		if ($tres && db::num($tres) > 0) {
 			return db::fetch_class($tres, $this->table);
 		}
 
