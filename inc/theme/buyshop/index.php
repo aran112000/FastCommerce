@@ -20,6 +20,11 @@
 	</article>
 	<aside id="left">
 		<p>Leftcol</p>
+		<p>
+			<?
+			$prod = new prod();
+			?>
+		</p>
 	</aside>
 	<aside id="right">
 		<p>Rightcol</p>
