@@ -12,14 +12,16 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 spl_autoload_register(function($class) {
-	if (file_exists(root . '/inc/module/' . $class . '.php')) {
-		require(root . '/inc/module/' . $class . '.php');
+	if (file_exists(root . '/inc/module/' . $class . '/' . $class . '.php')) {
+		require(root . '/inc/module/' . $class . '/' . $class . '.php');
 	} else if (file_exists(root . '/inc/object/' . $class . '.php')) {
 		require(root . '/inc/object/' . $class . '.php');
 	} else if (file_exists(root . '/inc/static/' . $class . '.php')) {
 		require(root . '/inc/static/' . $class . '.php');
 	} else if (file_exists(root . '/inc/' . $class . '.php')) {
 		require(root . '/inc/' . $class . '.php');
+	} else if (file_exists(root . '/inc/core/' . $class . '.php')) {
+		require(root . '/inc/core/' . $class . '.php');
 	}
 });
 
