@@ -1,0 +1,35 @@
+<?
+final class get {
+
+	private static $conf_file = array();
+	private static $fetched_settings = array();
+
+	public static function conf($block, $key, $fallback_value = '') {
+		if (empty(self::$conf_file)) {
+			self::$conf_file = parse_ini_file(root . '/.conf/default.ini', true, INI_SCANNER_RAW);
+		}
+
+		if (isset(self::$conf_file[$block][$key])) {
+			return trim(self::$conf_file[$block][$key]);
+		}
+
+		return trim($fallback_value);
+	}
+
+	public static function setting($key, $fallback_value = '') {
+		if (empty(self::$fetched_settings)) {
+			$sres = db::query('SELECT * FROM setting');
+			if (db::num($sres) > 0) {
+				while ($srow = db::fetch_object($sres)) {
+					self::$fetched_settings[$srow->key] = $srow->value;
+				}
+			}
+		}
+
+		if (isset(self::$fetched_settings[$key])) {
+			return self::$fetched_settings[$key];
+		}
+
+		return trim($fallback_value);
+	}
+}
