@@ -88,15 +88,11 @@ final class db {
 	 */
 	public static function fetch_class(PDOStatement $res, $class_name) {
 		$res->setFetchMode(PDO::FETCH_CLASS, $class_name);
-		if (self::num($res) > 1) {
-			$responses = array();
-			while ($resp = $res->fetch()) {
-				$responses[] = $resp;
-			}
-			return $responses;
-		} else {
-			return $resp = $res->fetch();
+		$responses = array();
+		while ($resp = $res->fetch()) {
+			$responses[] = $resp;
 		}
+		return $responses;
 	}
 
 	/**
