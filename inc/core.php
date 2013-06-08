@@ -1,6 +1,12 @@
 <?
+/**
+ * Class core
+ */
 final class core {
 
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		if (!isset($this->di)) {
 			$this->di = new di();
@@ -10,6 +16,9 @@ final class core {
 		}
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function get_theme() {
 		$theme = get::setting('theme', 'buyshop');
 		if (!empty($theme)) {
@@ -25,6 +34,9 @@ final class core {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function get_html_header() {
 		$html = '<!DOCTYPE html>'."\n";
 		$html .= '<html>'."\n";
@@ -37,10 +49,16 @@ final class core {
 		return $html;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function get_html_content() {
 		return ''; // TODO
 	}
 
+	/**
+	 * @return string
+	 */
 	public function get_html_footer() {
 		$html = '</body>'."\n";
 		$html .= '<script src="' . $this->di->theme_class->get_path('/js/jquery.min.js') . '"></script>'."\n";
@@ -49,6 +67,9 @@ final class core {
 		return $html;
 	}
 
+	/**
+	 * Destructor
+	 */
 	public function __destruct() {
 		db::close();
 	}

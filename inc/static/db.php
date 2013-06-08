@@ -1,7 +1,16 @@
 <?
+/**
+ * Class db
+ */
 final class db {
+	/**
+	 * @var PDO null
+	 */
 	public static $conn = NULL;
 
+	/**
+	 * @return bool
+	 */
 	private static function connect() {
 		if (self::$conn === NULL) {
 			try {
@@ -11,12 +20,20 @@ final class db {
 					PDO::ATTR_PERSISTENT => true
 				));
 				self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				return true;
 			} catch (Exception $e) {
 				trigger_error('MySQL connect error: ' . $e->getMessage());
 			}
 		}
+
+		return false;
 	}
 
+	/**
+	 * @param       $sql
+	 * @param array $params
+	 * @return bool
+	 */
 	public static function query($sql, array $params = array()) {
 		if (self::$conn === NULL) {
 			self::connect();
@@ -30,10 +47,12 @@ final class db {
 		} else {
 			return self::$conn->query($sql);
 		}
-
-		return false;
 	}
 
+	/**
+	 * @param PDOStatement $res
+	 * @return bool|int
+	 */
 	public static function num(PDOStatement $res) {
 		if ($res) {
 			return $res->rowCount();
@@ -42,6 +61,10 @@ final class db {
 		return false;
 	}
 
+	/**
+	 * @param PDOStatement $res
+	 * @return bool|mixed
+	 */
 	public static function fetch_array(PDOStatement $res) {
 		if ($res) {
 			$res->setFetchMode(PDO::FETCH_ASSOC);
@@ -51,6 +74,10 @@ final class db {
 		return false;
 	}
 
+	/**
+	 * @param PDOStatement $res
+	 * @return bool|mixed
+	 */
 	public static function fetch_object(PDOStatement $res) {
 		if ($res) {
 			$res->setFetchMode(PDO::FETCH_OBJ);
@@ -60,6 +87,11 @@ final class db {
 		return false;
 	}
 
+	/**
+	 * @param PDOStatement $res
+	 * @param              $class_name
+	 * @return bool|mixed
+	 */
 	public static function fetch_class(PDOStatement $res, $class_name) {
 		if ($res) {
 			$res->setFetchMode(PDO::FETCH_CLASS, $class_name);
@@ -69,6 +101,10 @@ final class db {
 		return false;
 	}
 
+	/**
+	 * @param PDOStatement $res
+	 * @return bool
+	 */
 	public static function get_last_insert_id(PDOStatement $res) {
 		if ($res) {
 			return $res->lastInsertId();
@@ -77,7 +113,11 @@ final class db {
 		return false;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public static function close() {
 		self::$conn = NULL;
+		return true;
 	}
 }
