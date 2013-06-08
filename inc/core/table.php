@@ -60,7 +60,12 @@ class table {
 		$options['params']['id'] = (int) $id;
 		$options['limit'] = 1;
 
-		return $this->do_retrieve($fields, $options);
+		$results = $this->do_retrieve($fields, $options);
+		if (!empty($results)) {
+			return $results[0];
+		}
+
+		return false;
 	}
 
 	/**
@@ -112,6 +117,10 @@ class table {
 
 		$tres = db::query($sql, $params);
 		if ($tres && db::num($tres) > 0) {
+			if (isset($options['limit']) && $options['limit'] == 1) {
+				$result = db::fetch_class($tres, $this->table);
+				return $result[0];
+			}
 			return db::fetch_class($tres, $this->table);
 		}
 
