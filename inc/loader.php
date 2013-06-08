@@ -27,6 +27,6 @@ if (!defined('load_core') || !load_core) {
 	$core = new core();
 
 	if (!ajax) {
-		require(root . '/index_screen.php');
+		$core->get_theme();
 	}
 }
