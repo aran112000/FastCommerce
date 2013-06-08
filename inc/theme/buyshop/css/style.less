@@ -1,5 +1,5 @@
 @primary: #33ccff;
-@light-border: #ccc;
+@light-border: #e8e8e8;
 @default-color: #333;
 @default-font-size: 12px;
 @default-font: Arial, Helvetica, sans-serif;
@@ -13,45 +13,23 @@ h1, h2, h3, h4, h5, h6, strong, em { color: @primary }
 
 body {
   margin: 0;
-  background: url("@{theme-path}/images/body.jpg") center top no-repeat fixed;
+  background: #fff url("@{theme-path}/images/body.jpg") center 70px no-repeat fixed;
   header {
     display: block;
     overflow: hidden;
     clear: both;
     margin-bottom: 20px;
+    height: 175px;
+    border-bottom: 2px solid @light-border;
     img {
-      float: left;
-    }
-    h1 {
-      margin: 0 0 0 20px;
-      line-height: 100px;
+      display: block;
+      margin: 20px auto 0 auto;
     }
   }
   section#main {
-    article {
-      display: inline-block;
-      border: 1px solid @light-border;
-      width: 50%;
-      margin: 0 20px;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
-    }
-    aside {
-      display: block;
-      width: 25%;
-      max-width: (300px - 22);
-      border: 1px solid @light-border;
-      padding: 20px;
-      background-color: #fff;
-    }
-    aside#left {
-      float: left;
-      border-radius: 0 5px 5px 0px; -moz-border-radius: 0 5px 5px 0px; -webkit-border-radius: 0 5px 5px 0px;
-    }
-    aside#right {
-      float: right;
-      border-radius: 5px 0 0 5px; -moz-border-radius: 5px 0 0 5px; -webkit-border-radius: 5px 0 0 5px;
-    }
+    width: 1170px;
+    display: block;
+    overflow: hidden;
+    margin: 0 auto;
   }
 }
