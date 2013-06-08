@@ -45,22 +45,45 @@ class table {
 		}
 	}
 
+	/**
+	 * @param array $fields
+	 * @param       $id
+	 * @param array $options
+	 *
+	 * @return bool|mixed
+	 */
 	public function do_retrieve_from_id(array $fields = array(), $id, array $options = array()) {
+		if (!isset($options['where'])) $options['where'] = array();
+		if (!isset($options['params'])) $options['params'] = array();
+
+		$options['where'][] = '`' . key($this->fields) . '` = :id';
+		$options['params']['id'] = (int) $id;
+
+		return $this->do_retrieve($fields, $options);
+	}
+
+	/**
+	 * @param array $fields
+	 * @param array $options
+	 *
+	 * @return bool|mixed
+	 */
+	public function do_retrieve(array $fields = array(), array $options = array()) {
 		if (empty($fields)) {
 			$fields = $this->get_default_select_fields();
 		}
 
 		$sql = 'SELECT `' . implode('`, `', $fields) . '` FROM `' . $this->table . '`';
+		$where = $params = array();
 
-		$where = array(
-			'`' . key($this->fields) . '` = :id'
-		);
 		if (!$this->retrieve_nonlive) {
 			if (isset($this->fields['live'])) {
-				$where[] = 'live = 1';
+				$where[] = 'live = :live';
+				$params['live'] = 1;
 			}
 			if (isset($this->fields['deleted'])) {
-				$where[] = 'deleted = 0';
+				$where[] = 'deleted = :deleted';
+				$params['deleted'] = 0;
 			}
 		}
 		if (isset($options['where']) && !empty($options['where'])) {
@@ -73,14 +96,18 @@ class table {
 		if (!empty($where)) {
 			$sql .= ' WHERE ' . implode(' AND ', $where);
 		}
-
-		$params = array(
-			'id' => (int) $id,
-		);
 		if (!empty($options['params']) && is_array($options['params'])) {
 			$params = array_merge($params, $options['params']);
 		}
-		$sql .= ' LIMIT 1';
+		if (isset($options['group_by']) && !empty($options['group_by'])) {
+			$sql .= ' GROUP BY `' . (string) $options['group_by'] . '`';
+		}
+		if (isset($options['order_by']) && !empty($options['order_by'])) {
+			$sql .= ' ORDER BY `' . (string) $options['order_by'] . '`';
+		}
+		if (isset($options['limit']) && is_numeric($options['limit'])) {
+			$sql .= ' LIMIT ' . (int) $options['limit'];
+		}
 
 		$tres = db::query($sql, $params);
 		if ($tres && db::num($tres) == 1) {
@@ -90,6 +117,9 @@ class table {
 		return false;
 	}
 
+	/**
+	 * @return array
+	 */
 	private function get_default_select_fields() {
 		$fields = array();
 		if (!empty($this->fields)) {
