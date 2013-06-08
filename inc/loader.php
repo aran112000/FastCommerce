@@ -27,9 +27,10 @@ spl_autoload_register(function($class) {
 });
 
 if (!defined('load_core') || !load_core) {
-	$core = new core();
+	$di = new di();
+	$di->core = new core();
 
 	if (!ajax) {
-		$core->get_theme();
+		$di->core->get_theme();
 	}
 }
