@@ -1,0 +1,50 @@
+@primary: #33ccff;
+@light-border: #ccc;
+@default-color: #333;
+@default-font-size: 12px;
+@default-font: Arial, Helvetica, sans-serif;
+@theme-path: "/inc/theme/buyshop";
+
+a { text-decoration: none; }
+a, p, em, div, span, header, section, b, strong { font-size: @default-font-size; }
+a, p, em, div, span, header, section, b, strong, small, h1, h2, h3, h3, h5, h6 { color: @default-color; font-family: @default-font; }
+
+h1, h2, h3, h4, h5, h6, strong, em { color: @primary }
+
+body {
+  margin: 0;
+  background: url("@{theme-path}/images/body.jpg") center top no-repeat;
+  header {
+    display: block;
+    overflow: hidden;
+    clear: both;
+    margin-bottom: 20px;
+    img {
+      float: left;
+    }
+    h1 {
+      margin: 0 0 0 20px;
+      line-height: 100px;
+    }
+  }
+  section#main {
+    article {
+      display: inline-block;
+      border: 1px solid @light-border;
+      width: 50%;
+      margin: 0 20px;
+    }
+    aside {
+      display: block;
+      width: 25%;
+      max-width: (300px - 22);
+      border: 1px solid @light-border;
+    }
+    aside#left {
+      float: left;
+    }
+    aside#right {
+      float: right;
+    }
+  }
+}

@@ -1,7 +1,7 @@
-<?=$core->get_html_header()?>
+<?=$this->get_html_header()?>
 <header>
 	<a href="/" title="<?=get::setting('site_name')?>">
-		<img src="http://placehold.it/300x100" alt="<?=get::setting('site_name')?>" width="300" height="100" />
+		<img src="<?=$this->di->theme_class->get_path('/images/logo.png')?>" width="300" height="100" />
 		<h1><?=get::setting('site_name')?></h1>
 	</a>
 </header>
@@ -25,5 +25,5 @@
 		<p>Rightcol</p>
 	</aside>
 </section>
-<?=$core->get_html_content()?>
-<?=$core->get_html_footer()?>
+<?=$this->get_html_content()?>
+<?=$this->get_html_footer()?>
