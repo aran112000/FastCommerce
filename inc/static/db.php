@@ -40,13 +40,17 @@ final class db {
 		}
 
 		if (!empty($params)) {
-			if (!self::$conn->prepare($sql)) {
-				trigger_error(self::$conn->errorInfo());
+			try {
+				$res = self::$conn->prepare($sql);
+				return $res->execute($params);
+			} catch (Exception $e) {
+				trigger_error('MySQL query error: ' . $e->getMessage());
 			}
-			return self::$conn->execute($params);
 		} else {
 			return self::$conn->query($sql);
 		}
+
+		return false;
 	}
 
 	/**
@@ -54,11 +58,7 @@ final class db {
 	 * @return bool|int
 	 */
 	public static function num(PDOStatement $res) {
-		if ($res) {
-			return $res->rowCount();
-		}
-
-		return false;
+		return $res->rowCount();
 	}
 
 	/**
@@ -66,12 +66,8 @@ final class db {
 	 * @return bool|mixed
 	 */
 	public static function fetch_array(PDOStatement $res) {
-		if ($res) {
-			$res->setFetchMode(PDO::FETCH_ASSOC);
-			return $res->fetch();
-		}
-
-		return false;
+		$res->setFetchMode(PDO::FETCH_ASSOC);
+		return $res->fetch();
 	}
 
 	/**
@@ -79,12 +75,8 @@ final class db {
 	 * @return bool|mixed
 	 */
 	public static function fetch_object(PDOStatement $res) {
-		if ($res) {
-			$res->setFetchMode(PDO::FETCH_OBJ);
-			return $res->fetch();
-		}
-
-		return false;
+		$res->setFetchMode(PDO::FETCH_OBJ);
+		return $res->fetch();
 	}
 
 	/**
@@ -93,12 +85,8 @@ final class db {
 	 * @return bool|mixed
 	 */
 	public static function fetch_class(PDOStatement $res, $class_name) {
-		if ($res) {
-			$res->setFetchMode(PDO::FETCH_CLASS, $class_name);
-			return $res->fetch();
-		}
-
-		return false;
+		$res->setFetchMode(PDO::FETCH_CLASS, $class_name);
+		return $res->fetch();
 	}
 
 	/**
@@ -106,11 +94,15 @@ final class db {
 	 * @return bool
 	 */
 	public static function get_last_insert_id(PDOStatement $res) {
-		if ($res) {
-			return $res->lastInsertId();
-		}
+		return self::$conn->lastInsertId($res);
+	}
 
-		return false;
+	/**
+	 * @param $term
+	 * @return string
+	 */
+	public static function esc($term) {
+		return addcslashes($term, "\\\000\n\r'\"\032%_");
 	}
 
 	/**
