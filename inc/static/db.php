@@ -42,7 +42,9 @@ final class db {
 		try {
 			if (!empty($params)) {
 				$res = self::$conn->prepare($sql);
-				return $res->execute($params);
+				if ($res->execute($params)) {
+					return $res;
+				}
 			} else {
 				return self::$conn->query($sql);
 			}
