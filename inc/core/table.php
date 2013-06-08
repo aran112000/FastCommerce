@@ -13,6 +13,13 @@ class table {
 	public $mysql_select_ignore_fields = array('live', 'deleted');
 
 	/**
+	 * Leave NULL for to inherit DB table name from calling class, this should only be used if you need to alias
+	 *
+	 * @var null
+	 */
+	public $mysql_table_name = NULL;
+
+	/**
 	 * @var array
 	 */
 	protected $fields = array();
@@ -27,7 +34,7 @@ class table {
 	 */
 	public function __construct() {
 		$this->di = new di();
-		$this->table = get_called_class();
+		$this->table = ($this->mysql_table_name !== NULL ? $this->mysql_table_name : get_called_class());
 		if (!empty($this->table)) {
 			$this->fields = table_cache::get_table_definition($this->table);
 		}
