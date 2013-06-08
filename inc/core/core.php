@@ -39,8 +39,8 @@ final class core {
 					trigger_error('No controller found for module: ' . $module_name);
 				}
 			} else {
-				$this->di->page = new page('page');
-				$this->page['body'] = $this->di->page->__controller($url_parts, count($url_parts));
+				$this->di->pages = new pages('pages');
+				$this->page['body'] = $this->di->pages->__controller($url_parts, count($url_parts));
 			}
 		}
 	}
