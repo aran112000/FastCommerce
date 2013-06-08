@@ -30,8 +30,11 @@ final class core {
 				$module_name = $module_aliases[$module_name];
 			}
 
+			$this->di->pages = function() {
+				return new pages('pages');
+			};
+
 			if (is_readable(root . '/inc/module/' . $module_name . '/' . $module_name . '.php')) {
-				// TODO test this block
 				$this->di->$module_name = new $module_name($module_name);
 				if (get::method_exists($this->di->$module_name, '__controller')) {
 					$this->page['body'] = $this->di->$module_name->__controller($url_parts, count($url_parts));
@@ -39,7 +42,6 @@ final class core {
 					trigger_error('No controller found for module: ' . $module_name);
 				}
 			} else {
-				$this->di->pages = new pages('pages');
 				$this->page['body'] = $this->di->pages->__controller($url_parts, count($url_parts));
 			}
 		}
@@ -83,7 +85,7 @@ final class core {
 		if (isset($this->page['meta_description']) && !empty($this->page['meta_description'])) {
 			$html .= "\t".'<meta name="description" content="' . $this->page['meta_description'] . '" />'."\n";
 		}
-		$html .= "\t".'<meta name="robots" content="' . $this->page['robots'] . '" />'."\n";
+		$html .= "\t".'<meta name="robots" content="' . (isset($this->page['robots']) ? $this->page['robots'] : 'index,follow') . '" />'."\n";
 		if (isset($this->page['social_meta_tags']) && !empty($this->page['social_meta_tags'])) {
 			foreach ($this->page['social_meta_tags'] as $tag) {
 				$html .= "\t".$tag."\n";
