@@ -35,12 +35,12 @@ class seo extends table {
 			$description_sentences = explode('. ', $page_description, 3);
 			$page_description = trim((isset($description_sentences[0]) ? $description_sentences[0] . '. ' . (isset($description_sentences[1]) ? $description_sentences[1] : '') : ''));
 		}
-		$this->di->core->page['meta_description'] = $page_description;
+		$this->di->core->page['meta_description'] = trim(strip_tags($page_description));
 	}
 
 	public function set_meta_keywords() {
 		if (isset($this->current->meta_keywords) && !empty($this->current->meta_keywords)) {
-			$this->di->core->page['meta_keywords'] = $this->current->meta_keywords;
+			$this->di->core->page['meta_keywords'] = trim(strip_tags($this->current->meta_keywords));
 		}
 	}
 
