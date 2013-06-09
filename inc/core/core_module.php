@@ -13,6 +13,7 @@ class core_module extends seo {
 
 	/**
 	 * @param null $table
+	 * @param null $di
 	 */
 	public function __construct($table = NULL, $di = NULL) {
 		if (!isset($this->di)) {

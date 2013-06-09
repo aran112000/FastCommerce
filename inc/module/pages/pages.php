@@ -6,6 +6,7 @@ final class pages extends core_module {
 
 	/**
 	 * @param null $page
+	 * @param null $di
 	 */
 	public function __construct($page, $di) {
 		parent::__construct('page', $di);

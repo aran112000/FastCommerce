@@ -5,7 +5,8 @@
 final class categories extends core_module {
 
 	/**
-	 * @param string $table
+	 * @param null $table
+	 * @param null $di
 	 */
 	public function __construct($table = NULL, $di) {
 		parent::__construct('cat', $di);
@@ -37,7 +38,8 @@ final class categories extends core_module {
 	}
 
 	/**
-	 * @param int $parent_cid
+	 * @param int    $parent_cid
+	 * @param string $class
 	 * @return string
 	 */
 	public function get_list($parent_cid = 0, $class = 'list') {

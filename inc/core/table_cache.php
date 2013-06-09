@@ -71,7 +71,7 @@ final class table_cache {
 	}
 
 	/**
-	 * @param $mysql_field_type
+	 * @param $mysql_field
 	 * @return mixed
 	 */
 	private function get_field_type($mysql_field) {
