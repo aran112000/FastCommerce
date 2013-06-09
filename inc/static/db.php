@@ -20,6 +20,7 @@ final class db {
 					PDO::ATTR_PERSISTENT => true
 				));
 				self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 				return true;
 			} catch (Exception $e) {
 				trigger_error('MySQL connect error: ' . $e->getMessage());
