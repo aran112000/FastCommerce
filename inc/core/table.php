@@ -57,7 +57,7 @@ class table {
 		if (!isset($options['params'])) $options['params'] = array();
 
 		$options['where'][] = '`' . key($this->fields) . '` = :id';
-		$options['params']['id'] = (int) $id;
+		$options['params']['id'] = (int)$id;
 		$options['limit'] = 1;
 
 		$results = $this->do_retrieve($fields, $options);
@@ -79,40 +79,57 @@ class table {
 			$fields = $this->get_default_select_fields();
 		}
 
-		$sql = 'SELECT `' . implode('`, `', $fields) . '` FROM `' . $this->table . '`';
-		$where = $params = array();
-
+		$wheres = array();
+		$params = (isset($options['params']) ? $options['params'] : array());
+		$join = '';
 		if (!$this->retrieve_nonlive) {
 			if (isset($this->fields['live'])) {
-				$where[] = 'live = :live';
+				$wheres[] = 'live = :live';
 				$params['live'] = 1;
 			}
 			if (isset($this->fields['deleted'])) {
-				$where[] = 'deleted = :deleted';
+				$wheres[] = 'deleted = :deleted';
 				$params['deleted'] = 0;
 			}
 		}
-		if (isset($options['where']) && !empty($options['where'])) {
-			if (is_array($options['where'])) {
-				$where = array_merge($where, $options['where']);
-			} else {
-				$where[] = $options['where'];
+		if (isset($options['join']) && !empty($options['join'])) {
+			foreach ($fields as &$field) {
+				$field = (!strstr($field, '.') ? $this->table . '`.`' . $field : $field);
+			}
+			foreach ($wheres as &$where) {
+				$where = (!strstr($where, '.') ? '`' . $this->table . '`.' . $where : $where);
+			}
+			foreach ($options['join'] as $table => $condition) {
+				$join .= ' JOIN `' . $table . '` ON ' . $condition;
 			}
 		}
-		if (!empty($where)) {
-			$sql .= ' WHERE ' . implode(' AND ', $where);
+
+		$sql = 'SELECT `' . implode('`, `', $fields) . '` FROM `' . $this->table . '`';
+		$sql .= $join;
+
+		if (isset($options['where']) && !empty($options['where'])) {
+			if (is_array($options['where'])) {
+				$wheres = array_merge($wheres, $options['where']);
+			} else {
+				$wheres[] = $options['where'];
+			}
+		}
+		if (!empty($wheres)) {
+			$sql .= ' WHERE ' . implode(' AND ', $wheres);
 		}
 		if (!empty($options['params']) && is_array($options['params'])) {
 			$params = array_merge($params, $options['params']);
 		}
 		if (isset($options['group_by']) && !empty($options['group_by'])) {
-			$sql .= ' GROUP BY `' . (string) $options['group_by'] . '`';
+			$sql .= ' GROUP BY `' . (string)$options['group_by'] . '`';
+		} else {
+			$sql .= ' GROUP BY `' . (string)key($this->fields) . '`';
 		}
 		if (isset($options['order_by']) && !empty($options['order_by'])) {
-			$sql .= ' ORDER BY `' . (string) $options['order_by'] . '`';
+			$sql .= ' ORDER BY `' . (string)$options['order_by'] . '`';
 		}
 		if (isset($options['limit']) && is_numeric($options['limit'])) {
-			$sql .= ' LIMIT ' . (int) $options['limit'];
+			$sql .= ' LIMIT ' . (int)$options['limit'];
 		}
 
 		$tres = db::query($sql, $params);
