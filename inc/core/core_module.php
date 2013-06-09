@@ -34,12 +34,12 @@ class core_module extends seo {
 	public function __controller($path_parts, $path_count) {
 		if (!isset($this->current) || empty($this->current)) {
 			if ($path_parts[0] == 404) {
-				run::http_status(404);
+				$this->di->run->http_status(404);
 				return $this->get_view('404');
 			}
 
 			if (!$this->current = $this->di->{$this->table}->do_retrieve(array(), array('where' => 'fn=:fn', 'params' => array('fn' => (isset($path_parts[$this->fn_path_number]) ? $path_parts[$this->fn_path_number] : '')), 'limit' => 1))) {
-				run::header_redir('/404', 404);
+				$this->di->run->header_redir('/404', 404);
 			}
 		}
 
