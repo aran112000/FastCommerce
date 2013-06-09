@@ -42,9 +42,6 @@ final class categories extends core_module {
 	 */
 	public function get_list($parent_cid = 0, $class = 'list') {
 		$html = '';
-		if (!isset($this->di->cat)) {
-			$this->di->cat = new cat();
-		}
 		$cats = $this->di->cat->do_retrieve(array(), array('where' => 'parent_cid=:parent_cid', 'params' => array('parent_cid' => $parent_cid)));
 		if (!empty($cats)) {
 			$html .= '<ul id="cat" class="' . $class . '">'."\n";
