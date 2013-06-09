@@ -12,6 +12,11 @@ final class core {
 	public $page = array();
 
 	/**
+	 * @var DI null
+	 */
+	private $di;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
