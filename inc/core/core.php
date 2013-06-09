@@ -20,6 +20,16 @@ final class core {
 		}
 	}
 
+	/**
+	 * @var array
+	 */
+	public $footer_js_files = array();
+
+	/**
+	 * @var array
+	 */
+	public $inline_js = array();
+
 	public function __controller() {
 		$url_parts = $this->get_url_parts();
 		if (!empty($url_parts)) {
@@ -58,9 +68,7 @@ final class core {
 			if (is_readable(root . '/inc/theme/' . $theme . '/index.php')) {
 				$this->theme = $theme;
 				$this->di->theme_class = function() {
-					$theme = new theme();
-					$theme->di = $this->di;
-
+					$theme = new theme($this->di);
 					return $theme;
 				};
 				require(root . '/inc/theme/' . $theme . '/index.php');
@@ -113,7 +121,17 @@ final class core {
 	 */
 	public function get_html_footer() {
 		$html = '</body>'."\n";
-		$html .= '<script src="' . $this->di->asset->get('/inc/theme/_global/js/jquery.min.js') . '"></script>'."\n";
+
+		$html .= '<script>';
+		$html .= 'function __ls(b,c){(function(){if(0!=b.length){var d=b.shift(),e=arguments.callee,a=document.createElement(\'script\');a.src=d;a.onload=a.onreadystatechange=function(){a.onreadystatechange=a.onload=null;e()};(document.getElementsByTagName(\'head\')[0]||document.body).appendChild(a)}else c&&c()})()};__ls(["' . implode('","', $this->footer_js_files) . '"]';
+		if (!empty($this->inline_js)) {
+			$html .= ',function(){$(document).ready(function(){';
+			$html .= implode("\n", $this->inline_js);
+			$html .= '});});';
+		} else {
+			$html .= ');';
+		}
+		$html .= '</script>'."\n";
 		$html .= '</html>'."\n";
 
 		return $html;
