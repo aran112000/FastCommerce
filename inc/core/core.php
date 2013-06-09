@@ -14,7 +14,7 @@ final class core {
 	/**
 	 * @var DI null
 	 */
-	private $di;
+	public $di;
 
 	/**
 	 * Constructor
