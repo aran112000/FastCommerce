@@ -5,6 +5,17 @@
 final class di {
 
 	/**
+	 * Construct
+	 *
+	 * Used within DI to define any defaults
+	 */
+	public function __construct() {
+		$this->add('asset', function() {
+			new asset_manager();
+		});
+	}
+
+	/**
 	 * @param $name
 	 * @return mixed
 	 * @throws Exception
@@ -62,4 +73,15 @@ final class di {
 	public function add($name, $value) {
 		di_container::$registrants[$name] = $value;
 	}
+}
+
+/**
+ * Class di_container
+ * 	Used for storage of items within di() to ensure they persist accross classes
+ */
+final class di_container {
+	/**
+	 * @var array
+	 */
+	public static $registrants = array();
 }
