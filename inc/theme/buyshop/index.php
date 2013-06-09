@@ -10,7 +10,7 @@
 		<?=$this->get_html_content()?>
 	</article>
 	<footer>
-		<small>&copy; <?=date('Y') . ' ' . get::setting('site_name')?></small>
+		<small>&copy; <?=date('Y') . ' ' . get::setting('site_name')?>. All rights reserved</small>
 	</footer>
 </section>
 <?=$this->get_html_footer()?>
