@@ -32,7 +32,7 @@ final class pages extends core_module {
 			$params = array('pid' => (isset($path_parts[0]) ? $path_parts[0] : 0), 'fn' => (isset($path_parts[1]) ? $path_parts[1] : ''));
 		}
 		$params['direct_link'] = uri;
-		if (!$this->current = $this->do_retrieve(array(), array('where' => '(pid=:pid AND fn=:fn) OR (direct_link = :direct_link)', 'params' => $params, 'limit' => 1))) {
+		if (!$this->current = $this->di->{$this->table}->do_retrieve(array(), array('where' => '(pid=:pid AND fn=:fn) OR (direct_link = :direct_link)', 'params' => $params, 'limit' => 1))) {
 			run::header_redir('/404', 404);
 		}
 

@@ -14,11 +14,15 @@ class core_module extends seo {
 	/**
 	 * @param null $table
 	 */
-	public function __construct($table = NULL) {
-		$this->di = new di();
+	public function __construct($table = NULL, $di = NULL) {
+		if ($di === NULL) {
+			$this->di = new di();
+		} else {
+			$this->di = $di;
+		}
 		if ($table !== NULL) {
 			$this->table = $table;
-			$this->fields = table_cache::get_table_definition($this->table);
+			$this->fields = $this->di->table_cache->get_table_definition($this->table);
 		}
 	}
 
@@ -36,7 +40,7 @@ class core_module extends seo {
 				return $this->get_view('404');
 			}
 
-			if (!$this->current = $this->do_retrieve(array(), array('where' => 'fn=:fn', 'params' => array('fn' => (isset($path_parts[$this->fn_path_number]) ? $path_parts[$this->fn_path_number] : '')), 'limit' => 1))) {
+			if (!$this->current = $this->di->{$this->table}->do_retrieve(array(), array('where' => 'fn=:fn', 'params' => array('fn' => (isset($path_parts[$this->fn_path_number]) ? $path_parts[$this->fn_path_number] : '')), 'limit' => 1))) {
 				run::header_redir('/404', 404);
 			}
 		}

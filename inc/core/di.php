@@ -11,7 +11,10 @@ final class di {
 	 */
 	public function __construct() {
 		$this->add('asset', function() {
-			new asset_manager();
+			$am = new asset_manager();
+			$am->di = $this;
+
+			return $am;
 		});
 	}
 
@@ -32,9 +35,10 @@ final class di {
 		}
 
 		// If $name is a module or object then we will auto create it
-		if (is_readable(root . '/inc/module/' . $name . '/' . $name . '.php') || is_readable(root . '/inc/object/' . $name . '.php')) {
-			$val = new $name();
+		if (is_readable(root . '/inc/module/' . $name . '/' . $name . '.php') || is_readable(root . '/inc/object/' . $name . '.php') || is_readable(root . '/inc/core/' . $name . '.php')) {
+			$val = new $name($this);
 			$this->add($name, $val);
+
 			return $val;
 		}
 

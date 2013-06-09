@@ -29,7 +29,7 @@ final class categories extends core_module {
 
 			return $this->get_view('all_categories');
 		}
-		if (!$this->current = $this->do_retrieve(array(), array('where' => 'fn=:fn', 'params' => array('fn' => (isset($path_parts[$this->fn_path_number]) ? $path_parts[$this->fn_path_number] : '')), 'limit' => 1))) {
+		if (!$this->current = $this->di->{$this->table}->do_retrieve(array(), array('where' => 'fn=:fn', 'params' => array('fn' => (isset($path_parts[$this->fn_path_number]) ? $path_parts[$this->fn_path_number] : '')), 'limit' => 1))) {
 			run::header_redir('/404', 404);
 		}
 

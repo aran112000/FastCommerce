@@ -10,6 +10,11 @@ final class theme {
 	private $base_theme_path = '';
 
 	/**
+	 * @var array
+	 */
+	private $theme_settings = array();
+
+	/**
 	 * @param $relative_path
 	 * @return string
 	 */
@@ -19,5 +24,13 @@ final class theme {
 		}
 
 		return $this->base_theme_path . $relative_path;
+	}
+
+	public function get_theme_setting() {
+		if (empty($this->theme_settings)) {
+			$this->theme_settings = parse_ini_file(root . '/.conf/default.ini', true, INI_SCANNER_RAW);
+		}
+
+		return $this->theme_settings;
 	}
 }

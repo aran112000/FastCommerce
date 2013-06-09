@@ -15,7 +15,6 @@ final class core {
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->di = new di();
 		if (ajax) {
 			// TODO - Create ajax handler in PHP & JS
 		}
@@ -31,7 +30,7 @@ final class core {
 			}
 
 			$this->di->pages = function() {
-				return new pages('pages');
+				return new pages('pages', $this->di);
 			};
 
 			if (is_readable(root . '/inc/module/' . $module_name . '/' . $module_name . '.php')) {
@@ -57,7 +56,10 @@ final class core {
 			if (is_readable(root . '/inc/theme/' . $theme . '/index.php')) {
 				$this->theme = $theme;
 				$this->di->theme_class = function() {
-					return new theme();
+					$theme = new theme();
+					$theme->di = $this->di;
+
+					return $theme;
 				};
 				require(root . '/inc/theme/' . $theme . '/index.php');
 			}
@@ -109,7 +111,7 @@ final class core {
 	 */
 	public function get_html_footer() {
 		$html = '</body>'."\n";
-		$html .= '<script src="' . $this->di->theme_class->get_path('/js/jquery.min.js') . '"></script>'."\n";
+		$html .= '<script src="' . $this->di->asset->get('/inc/theme/_global/js/jquery.min.js') . '"></script>'."\n";
 		$html .= '</html>'."\n";
 
 		return $html;

@@ -88,7 +88,7 @@ final class db {
 	 * @return bool|mixed
 	 */
 	public static function fetch_class(PDOStatement $res, $class_name) {
-		$res->setFetchMode(PDO::FETCH_CLASS, $class_name);
+		$res->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $class_name);
 		$responses = array();
 		while ($resp = $res->fetch()) {
 			$responses[] = $resp;

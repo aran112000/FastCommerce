@@ -24,6 +24,10 @@ final class prod_list {
 		return false;
 	}
 
+	/**
+	 * @param $cid
+	 * @return bool
+	 */
 	public function get_list_from_cat($cid) {
 		return $this->get_list(
 			array(
