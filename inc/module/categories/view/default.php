@@ -9,8 +9,7 @@ if ($prods && !empty($prods)) {
 		<? foreach ($prods as $prod) { ?>
 			<li>
 				<a href="<?= $prod->get_url() ?>" title="<?= $prod->price ?>">
-					<span class="padded_img"><img src="http://placehold.it/230x290" alt="<?= $prod->title ?>"
-												  width="230" height="290"/></span>
+					<span class="padded_img"><img src="http://placehold.it/230x290" alt="<?= $prod->title ?>" width="230" height="290"/></span>
 					<strong class="title"><?= $prod->title ?></strong>
 					<strong class="price">&#163;<?= number_format($prod->price, 2) ?></strong>
 				</a>
