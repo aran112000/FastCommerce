@@ -19,6 +19,15 @@ final class table_cache {
 	protected $table_definitions = array();
 
 	/**
+	 * @param null $di
+	 */
+	public function __construct($di = NULL) {
+		if (!isset($this->di)) {
+			$this->di = ($di !== NULL ? $di : new di());
+		}
+	}
+
+	/**
 	 * @param $table
 	 * @return bool
 	 */
@@ -27,10 +36,10 @@ final class table_cache {
 			return $this->table_definitions[$table];
 		}
 
-		$tres = db::query('SHOW COLUMNS FROM `' . db::esc($table) . '`');
-		if ($tres && db::num($tres) > 0) {
+		$tres = $this->di->db->query('SHOW COLUMNS FROM `' . $this->di->db->esc($table) . '`');
+		if ($tres && $this->di->db->num($tres) > 0) {
 			$this->table_definitions[$table] = array();
-			while ($trow = db::fetch_array($tres)) {
+			while ($trow = $this->di->db->fetch_array($tres)) {
 				$mysql_field_details = $this->do_split_mysql_field($trow['Type']);
 				if (!empty($mysql_field_details)) {
 					$this->table_definitions[$table][$trow['Field']] = array(

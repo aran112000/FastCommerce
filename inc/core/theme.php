@@ -20,7 +20,7 @@ final class theme {
 	 */
 	public function get_path($relative_path) {
 		if (empty($this->base_theme_path)) {
-			$this->base_theme_path = '/inc/theme/' . get::setting('theme');
+			$this->base_theme_path = '/inc/theme/' . $this->di->get->setting('theme');
 		}
 
 		return $this->base_theme_path . $relative_path;

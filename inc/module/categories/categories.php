@@ -7,8 +7,8 @@ final class categories extends core_module {
 	/**
 	 * @param string $table
 	 */
-	public function __construct($table = NULL) {
-		parent::__construct('cat');
+	public function __construct($table = NULL, $di) {
+		parent::__construct('cat', $di);
 	}
 
 	/**
@@ -19,7 +19,7 @@ final class categories extends core_module {
 	 */
 	public function __controller($path_parts, $path_count) {
 		if ($path_parts[0] == 404) {
-			run::http_status(404);
+			$this->di->run->http_status(404);
 			return $this->get_view('404');
 		}
 
@@ -30,7 +30,7 @@ final class categories extends core_module {
 			return $this->get_view('all_categories');
 		}
 		if (!$this->current = $this->di->{$this->table}->do_retrieve(array(), array('where' => 'fn=:fn', 'params' => array('fn' => (isset($path_parts[$this->fn_path_number]) ? $path_parts[$this->fn_path_number] : '')), 'limit' => 1))) {
-			run::header_redir('/404', 404);
+			$this->di->run->header_redir('/404', 404);
 		}
 
 		return parent::__controller($path_parts, $path_count);

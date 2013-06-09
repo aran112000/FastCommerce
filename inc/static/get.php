@@ -7,22 +7,22 @@ final class get {
 	/**
 	 * @var array
 	 */
-	private static $conf_file = array();
+	private $conf_file = array();
 
 	/**
 	 * @var array
 	 */
-	private static $fetched_settings = array();
+	private $fetched_settings = array();
 
 	/**
 	 * @var array
 	 */
-	private static $method_exists_cache = array();
+	private $method_exists_cache = array();
 
 	/**
 	 * @var array
 	 */
-	private static $class_exists_cache = array();
+	private $class_exists_cache = array();
 
 	/**
 	 * @param string $block
@@ -30,18 +30,18 @@ final class get {
 	 * @param string $fallback_value
 	 * @return string
 	 */
-	public static function conf($block, $key = '', $fallback_value = '') {
-		if (empty(self::$conf_file)) {
-			self::$conf_file = parse_ini_file(root . '/.conf/default.ini', true, INI_SCANNER_RAW);
+	public function conf($block, $key = '', $fallback_value = '') {
+		if (empty($this->conf_file)) {
+			$this->conf_file = parse_ini_file(root . '/.conf/default.ini', true, INI_SCANNER_RAW);
 		}
 
 		if (!empty($key)) {
-			if (isset(self::$conf_file[$block][$key])) {
-				return self::$conf_file[$block][$key];
+			if (isset($this->conf_file[$block][$key])) {
+				return $this->conf_file[$block][$key];
 			}
 		} else {
-			if (isset(self::$conf_file[$block])) {
-				return self::$conf_file[$block];
+			if (isset($this->conf_file[$block])) {
+				return $this->conf_file[$block];
 			}
 		}
 
@@ -53,18 +53,18 @@ final class get {
 	 * @param string $fallback_value
 	 * @return string
 	 */
-	public static function setting($key, $fallback_value = '') {
-		if (empty(self::$fetched_settings)) {
-			$sres = db::query('SELECT `key`, `value` FROM setting');
-			if (db::num($sres) > 0) {
-				while ($srow = db::fetch_object($sres)) {
-					self::$fetched_settings[$srow->key] = $srow->value;
+	public function setting($key, $fallback_value = '') {
+		if (empty($this->fetched_settings)) {
+			$sres = $this->di->db->query('SELECT `key`, `value` FROM setting');
+			if ($this->di->db->num($sres) > 0) {
+				while ($srow = $this->di->db->fetch_object($sres)) {
+					$this->fetched_settings[$srow->key] = $srow->value;
 				}
 			}
 		}
 
-		if (isset(self::$fetched_settings[$key])) {
-			return self::$fetched_settings[$key];
+		if (isset($this->fetched_settings[$key])) {
+			return $this->fetched_settings[$key];
 		}
 
 		return trim($fallback_value);
@@ -76,13 +76,13 @@ final class get {
 	 *
 	 * @return mixed
 	 */
-	public static function method_exists($object, $method_name) {
+	public function method_exists($object, $method_name) {
 		$class_name = get_class($object);
-		if (!isset(self::$method_exists_cache[$class_name][$method_name])) {
-			self::$method_exists_cache[$class_name][$method_name] = (method_exists($object, $method_name));
+		if (!isset($this->method_exists_cache[$class_name][$method_name])) {
+			$this->method_exists_cache[$class_name][$method_name] = (method_exists($object, $method_name));
 		}
 
-		return self::$method_exists_cache[$class_name][$method_name];
+		return $this->method_exists_cache[$class_name][$method_name];
 	}
 
 	/**
@@ -90,11 +90,11 @@ final class get {
 	 *
 	 * @return mixed
 	 */
-	public static function class_exists($class_name) {
-		if (!isset(self::$method_exists_cache[$class_name])) {
-			self::$method_exists_cache[$class_name] = (class_exists($class_name));
+	public function class_exists($class_name) {
+		if (!isset($this->class_exists_cache[$class_name])) {
+			$this->class_exists_cache[$class_name] = (class_exists($class_name));
 		}
 
-		return self::$method_exists_cache[$class_name];
+		return $this->class_exists_cache[$class_name];
 	}
 }

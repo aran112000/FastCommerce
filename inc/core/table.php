@@ -137,13 +137,13 @@ class table {
 			$sql .= ' LIMIT ' . (int) $options['limit'];
 		}
 
-		$tres = db::query($sql, $params);
-		if ($tres && db::num($tres) > 0) {
+		$tres = $this->di->db->query($sql, $params);
+		if ($tres && $this->di->db->num($tres) > 0) {
 			if (isset($options['limit']) && $options['limit'] == 1) {
-				$result = db::fetch_class($tres, $this->table);
+				$result = $this->di->db->fetch_class($tres, $this->table);
 				return $result[0];
 			}
-			return db::fetch_class($tres, $this->table);
+			return $this->di->db->fetch_class($tres, $this->table);
 		}
 
 		return false;

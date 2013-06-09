@@ -8,8 +8,8 @@ final class run {
 	 * @param $path
 	 * @param $http_code
 	 */
-	public static function header_redir($path, $http_code) {
-		self::http_status($http_code);
+	public function header_redir($path, $http_code) {
+		$this->http_status($http_code);
 		header('Location: ' . $path, true);
 
 		exit();
@@ -18,7 +18,7 @@ final class run {
 	/**
 	 * @param $http_code
 	 */
-	public static function http_status($http_code) {
+	public function http_status($http_code) {
 		switch ($http_code) {
 			case 200:
 				$status_text = 'OK';

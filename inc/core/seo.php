@@ -23,7 +23,7 @@ class seo {
 		if (isset($this->current->title) && !empty($this->current->title)) {
 			$page_title = $this->current->title;
 		}
-		$page_title = (isset($page_title) ? $page_title . ' | ' . get::setting('site_name') : get::setting('site_name'));
+		$page_title = (isset($page_title) ? $page_title . ' | ' . $this->di->get->setting('site_name') : $this->di->get->setting('site_name'));
 		$this->di->core->page['title_tag'] = $page_title;
 	}
 
@@ -55,7 +55,7 @@ class seo {
 	}
 
 	public function set_social_tag_facebook() {
-		$this->di->core->page['social_meta_tags'][] = '<meta property="og:site_name" content="' . get::setting('site_name') . '" />';
+		$this->di->core->page['social_meta_tags'][] = '<meta property="og:site_name" content="' . $this->di->get->setting('site_name') . '" />';
 		$this->di->core->page['social_meta_tags'][] = '<meta property="og:title" content="' . $this->di->core->page['title_tag'] . '" />';
 		$this->di->core->page['social_meta_tags'][] = '<meta property="og:type" content="website" />';
 		$this->di->core->page['social_meta_tags'][] = '<meta property="og:url" content="http://' . host . uri . '" />';

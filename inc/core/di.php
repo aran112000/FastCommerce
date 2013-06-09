@@ -5,17 +5,41 @@
 final class di {
 
 	/**
+	 * @var array
+	 */
+	public $always_in_di = array(
+		'db',
+		'asset' => 'asset_manager',
+		'get',
+		'run',
+	);
+
+	/**
+	 * @var array
+	 *
+	 * Used for storage of items within di() to ensure they persist across classes
+	 */
+	private $registrants = array();
+
+	/**
 	 * Construct
 	 *
 	 * Used within DI to define any defaults
 	 */
 	public function __construct() {
-		$this->add('asset', function() {
-			$am = new asset_manager();
-			$am->di = $this;
+		if (!empty($this->always_in_di)) {
+			foreach ($this->always_in_di as $register_name => $class_name) {
+				$register_name = (!is_numeric($register_name) ? $register_name : $class_name);
+				if (!isset($this->$register_name)) {
+					$this->add($register_name, function() use ($class_name) {
+						$class = new $class_name($this);
+						$class->di = $this;
 
-			return $am;
-		});
+						return $class;
+					});
+				}
+			}
+		}
 	}
 
 	/**
@@ -24,12 +48,12 @@ final class di {
 	 * @throws Exception
 	 */
 	public function __get($name) {
-		if (isset(di_container::$registrants[$name])) {
-			$val = di_container::$registrants[$name];
+		if (isset($this->registrants[$name])) {
+			$val = $this->registrants[$name];
 			if (gettype($val) == 'object' && is_callable($val)) {
 				// Functions stored within DI aren't executed unless required to save on memory and once executed once the resulting value is stored in it's place
 				$val = $val();
-				di_container::$registrants[$name] = $val;
+				$this->registrants[$name] = $val;
 			}
 			return $val;
 		}
@@ -58,7 +82,7 @@ final class di {
 	 * @return bool
 	 */
 	public function __isset($name) {
-		return isset(di_container::$registrants[$name]);
+		return isset($this->registrants[$name]);
 	}
 
 	/**
@@ -66,7 +90,7 @@ final class di {
 	 */
 	public function __unset($name) {
 		if (isset($this->$name)) {
-			unset(di_container::$registrants[$name]);
+			unset($this->registrants[$name]);
 		}
 	}
 
@@ -75,17 +99,6 @@ final class di {
 	 * @param $value
 	 */
 	public function add($name, $value) {
-		di_container::$registrants[$name] = $value;
+		$this->registrants[$name] = $value;
 	}
-}
-
-/**
- * Class di_container
- * 	Used for storage of items within di() to ensure they persist accross classes
- */
-final class di_container {
-	/**
-	 * @var array
-	 */
-	public static $registrants = array();
 }

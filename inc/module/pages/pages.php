@@ -7,8 +7,8 @@ final class pages extends core_module {
 	/**
 	 * @param null $page
 	 */
-	public function __construct($page) {
-		parent::__construct('page');
+	public function __construct($page, $di) {
+		parent::__construct('page', $di);
 	}
 
 	/**
@@ -18,11 +18,11 @@ final class pages extends core_module {
 	 */
 	public function __controller($path_parts, $path_count) {
 		if ($path_count > 2) {
-			run::header_redir('/' . $path_parts[0], 301);
+			$this->di->run->header_redir('/' . $path_parts[0], 301);
 		}
 
 		if ($path_parts[0] == 404) {
-			run::http_status(404);
+			$this->di->run->http_status(404);
 			return $this->get_view('404');
 		}
 
@@ -33,7 +33,7 @@ final class pages extends core_module {
 		}
 		$params['direct_link'] = uri;
 		if (!$this->current = $this->di->{$this->table}->do_retrieve(array(), array('where' => '(pid=:pid AND fn=:fn) OR (direct_link = :direct_link)', 'params' => $params, 'limit' => 1))) {
-			run::header_redir('/404', 404);
+			$this->di->run->header_redir('/404', 404);
 		}
 
 		parent::__controller($path_parts, $path_count);

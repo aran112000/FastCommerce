@@ -6,20 +6,30 @@ final class db {
 	/**
 	 * @var PDO null
 	 */
-	public static $conn = NULL;
+	public $conn = NULL;
+
+	/**
+	 * @param null $di
+	 */
+	public function __construct($di = NULL) {
+		if (!isset($this->di)) {
+			$this->di = ($di !== NULL ? $di : new di());
+		}
+		$this->connect();
+	}
 
 	/**
 	 * @return bool
 	 */
-	private static function connect() {
-		if (self::$conn === NULL) {
+	private function connect() {
+		if ($this->conn === NULL) {
 			try {
-				$host = get::conf('db', 'host');
+				$host = $this->di->get->conf('db', 'host');
 				$host = ($host == 'localhost' ? '127.0.0.1' : $host);
-				self::$conn = new PDO('mysql:host=' . $host . ';dbname=' . get::conf('db', 'db'), get::conf('db', 'user'), get::conf('db', 'pass'), array(
+				$this->conn = new PDO('mysql:host=' . $host . ';dbname=' . $this->di->get->conf('db', 'db'), $this->di->get->conf('db', 'user'), $this->di->get->conf('db', 'pass'), array(
 					PDO::ATTR_PERSISTENT => true
 				));
-				self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 				return true;
 			} catch (Exception $e) {
@@ -35,19 +45,15 @@ final class db {
 	 * @param array $params
 	 * @return bool
 	 */
-	public static function query($sql, array $params = array()) {
-		if (self::$conn === NULL) {
-			self::connect();
-		}
-
+	public function query($sql, array $params = array()) {
 		try {
 			if (!empty($params)) {
-				$res = self::$conn->prepare($sql);
+				$res = $this->conn->prepare($sql);
 				if ($res->execute($params)) {
 					return $res;
 				}
 			} else {
-				return self::$conn->query($sql);
+				return $this->conn->query($sql);
 			}
 		} catch (Exception $e) {
 			trigger_error('MySQL query error: ' . $e->getMessage() . ' - Query: ' . $sql);
@@ -60,7 +66,7 @@ final class db {
 	 * @param PDOStatement $res
 	 * @return bool|int
 	 */
-	public static function num(PDOStatement $res) {
+	public function num(PDOStatement $res) {
 		return $res->rowCount();
 	}
 
@@ -68,7 +74,7 @@ final class db {
 	 * @param PDOStatement $res
 	 * @return bool|mixed
 	 */
-	public static function fetch_array(PDOStatement $res) {
+	public function fetch_array(PDOStatement $res) {
 		$res->setFetchMode(PDO::FETCH_ASSOC);
 		return $res->fetch();
 	}
@@ -77,7 +83,7 @@ final class db {
 	 * @param PDOStatement $res
 	 * @return bool|mixed
 	 */
-	public static function fetch_object(PDOStatement $res) {
+	public function fetch_object(PDOStatement $res) {
 		$res->setFetchMode(PDO::FETCH_OBJ);
 		return $res->fetch();
 	}
@@ -87,36 +93,31 @@ final class db {
 	 * @param              $class_name
 	 * @return bool|mixed
 	 */
-	public static function fetch_class(PDOStatement $res, $class_name) {
-		$res->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $class_name);
-		$responses = array();
-		while ($resp = $res->fetch()) {
-			$responses[] = $resp;
-		}
-		return $responses;
+	public function fetch_class(PDOStatement $res, $class_name) {
+		return $resp = $res->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $class_name, array($this->di));
 	}
 
 	/**
 	 * @param PDOStatement $res
 	 * @return bool
 	 */
-	public static function get_last_insert_id(PDOStatement $res) {
-		return self::$conn->lastInsertId($res);
+	public function get_last_insert_id(PDOStatement $res) {
+		return $this->conn->lastInsertId($res);
 	}
 
 	/**
 	 * @param $term
 	 * @return string
 	 */
-	public static function esc($term) {
+	public function esc($term) {
 		return addcslashes($term, "\\\000\n\r'\"\032%_");
 	}
 
 	/**
 	 * @return bool
 	 */
-	public static function close() {
-		self::$conn = NULL;
+	public function close() {
+		$this->conn = NULL;
 		return true;
 	}
 }

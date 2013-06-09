@@ -24,7 +24,7 @@ final class core {
 		$url_parts = $this->get_url_parts();
 		if (!empty($url_parts)) {
 			$module_name = $url_parts[0];
-			$module_aliases = get::conf('module_aliases');
+			$module_aliases = $this->di->get->conf('module_aliases');
 			if (isset($module_aliases[$module_name])) {
 				$module_name = $module_aliases[$module_name];
 			}
@@ -34,8 +34,10 @@ final class core {
 			};
 
 			if (is_readable(root . '/inc/module/' . $module_name . '/' . $module_name . '.php')) {
-				$this->di->$module_name = new $module_name($module_name);
-				if (get::method_exists($this->di->$module_name, '__controller')) {
+				if (!isset($this->di->$module_name)) {
+					$this->di->$module_name = new $module_name($module_name, $this->di);
+				}
+				if ($this->di->get->method_exists($this->di->$module_name, '__controller')) {
 					$this->page['body'] = $this->di->$module_name->__controller($url_parts, count($url_parts));
 				} else {
 					trigger_error('No controller found for module: ' . $module_name);
@@ -51,7 +53,7 @@ final class core {
 	 */
 	public function get_theme() {
 		$this->__controller();
-		$theme = get::setting('theme', 'buyshop');
+		$theme = $this->di->get->setting('theme', 'buyshop');
 		if (!empty($theme)) {
 			if (is_readable(root . '/inc/theme/' . $theme . '/index.php')) {
 				$this->theme = $theme;
@@ -121,6 +123,6 @@ final class core {
 	 * Destructor
 	 */
 	public function __destruct() {
-		db::close();
+		$this->di->db->close();
 	}
 }

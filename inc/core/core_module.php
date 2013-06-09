@@ -15,10 +15,8 @@ class core_module extends seo {
 	 * @param null $table
 	 */
 	public function __construct($table = NULL, $di = NULL) {
-		if ($di === NULL) {
-			$this->di = new di();
-		} else {
-			$this->di = $di;
+		if (!isset($this->di)) {
+			$this->di = ($di !== NULL ? $di : new di());
 		}
 		if ($table !== NULL) {
 			$this->table = $table;
