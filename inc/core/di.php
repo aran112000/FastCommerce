@@ -13,10 +13,17 @@ final class di {
 		if (isset(di_container::$registrants[$name])) {
 			$val = di_container::$registrants[$name];
 			if (gettype($val) == 'object' && is_callable($val)) {
-				// Functions stored within DI aren't executed unless required to same on memory and if called again the value is simply returned
+				// Functions stored within DI aren't executed unless required to save on memory and once executed once the resulting value is stored in it's place
 				$val = $val();
 				di_container::$registrants[$name] = $val;
 			}
+			return $val;
+		}
+
+		// If $name is a module or object then we will auto create it
+		if (is_readable(root . '/inc/module/' . $name . '/' . $name . '.php') || is_readable(root . '/inc/object/' . $name . '.php')) {
+			$val = new $name();
+			$this->add($name, $val);
 			return $val;
 		}
 
