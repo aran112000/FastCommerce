@@ -156,5 +156,8 @@ final class core extends dependency {
 			$this->di->ajaxify->do_serve();
 		}
 		$this->di->db->close();
+		if (gc_support) {
+			gc_collect_cycles();
+		}
 	}
 }
