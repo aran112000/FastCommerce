@@ -10,7 +10,7 @@ define('debug', (strstr(ip, '127.0.0.1')));
 define('ajax', (isset($_REQUEST['act']) && !empty($_REQUEST['act'])));
 define('gc_support', function_exists('gc_enable'));
 if (gc_support && !gc_enabled()) {
-	gc_enable();
+	gc_enable(); 
 }
 
 // Set PHP error reporting
