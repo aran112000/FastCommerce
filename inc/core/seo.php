@@ -19,6 +19,9 @@ class seo {
 		$this->set_social_tags();
 	}
 
+	/**
+	 *
+	 */
 	public function set_page_title() {
 		if (isset($this->current->title) && !empty($this->current->title)) {
 			$page_title = $this->current->title;
@@ -27,6 +30,9 @@ class seo {
 		$this->di->core->page['title_tag'] = $page_title;
 	}
 
+	/**
+	 *
+	 */
 	public function set_meta_description() {
 		$page_description = '';
 		if (isset($this->current->body) && !empty($this->current->body)) {
@@ -38,22 +44,34 @@ class seo {
 		$this->di->core->page['meta_description'] = trim(strip_tags($page_description));
 	}
 
+	/**
+	 *
+	 */
 	public function set_meta_keywords() {
 		if (isset($this->current->meta_keywords) && !empty($this->current->meta_keywords)) {
 			$this->di->core->page['meta_keywords'] = trim(strip_tags($this->current->meta_keywords));
 		}
 	}
 
+	/**
+	 *
+	 */
 	public function set_robots() {
 		$this->di->core->page['robots'] = 'index,follow';
 	}
 
+	/**
+	 *
+	 */
 	public function set_social_tags() {
 		$this->di->core->page['social_meta_tags'] = array();
 		$this->set_social_tag_facebook();
 		$this->set_social_tag_twitter();
 	}
 
+	/**
+	 *
+	 */
 	public function set_social_tag_facebook() {
 		$this->di->core->page['social_meta_tags'][] = '<meta property="og:site_name" content="' . $this->di->get->setting('site_name') . '" />';
 		$this->di->core->page['social_meta_tags'][] = '<meta property="og:title" content="' . $this->di->core->page['title_tag'] . '" />';
@@ -63,6 +81,9 @@ class seo {
 		//$this->di->core->page['social_meta_tags'][] = '<meta property="og:image" content="http://cdn.soraiseyourglasses.com/sryg/uploads/prod_img/2_1764_t_v1.jpg" />';
 	}
 
+	/**
+	 *
+	 */
 	public function set_social_tag_twitter() {
 		$this->di->core->page['social_meta_tags'][] = '<meta name="twitter:card" content="summary" />';
 		$this->di->core->page['social_meta_tags'][] = '<meta name="twitter:url" content="http://' . host . uri . '" />';
