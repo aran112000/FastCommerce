@@ -18,20 +18,14 @@ final class categories extends core_module {
 	 * @return bool|string
 	 */
 	public function __controller($path_parts, $path_count) {
-		if ($path_parts[0] == 404) {
-			$this->di->run->http_status(404);
-			return $this->get_view('404');
-		}
-
 		if ($path_count == 1) {
 			$this->di->pages->__controller($path_parts, $path_count);
 			$this->current = $this->di->pages->current;
 
 			return $this->get_view('all_categories');
 		}
-		if (!$this->current = $this->di->{$this->table}->do_retrieve(array(), array('where' => 'fn=:fn', 'params' => array('fn' => (isset($path_parts[$this->fn_path_number]) ? $path_parts[$this->fn_path_number] : '')), 'limit' => 1))) {
-			$this->di->run->header_redir('/404', 404);
-		}
+
+		$this->set_current((isset($path_parts[$this->fn_path_number]) ? $path_parts[$this->fn_path_number] : ''));
 
 		return parent::__controller($path_parts, $path_count);
 	}
