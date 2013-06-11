@@ -103,6 +103,7 @@ final class core extends dependency {
 		$html = '<!DOCTYPE html>'."\n";
 		$html .= '<html>'."\n";
 		$html .= '<head>'."\n";
+		$html .= '<link rel="dns-prefetch" href="http' . (ssl ? 's' : '') . '://' . host . '" />'."\n";
 		$html .= "\t".'<link rel="stylesheet" type="text/css" href="' . $this->di->theme_class->get_path('/css/style.css') . '" />'."\n";
 		$html .= "\t".'<title>' . (isset($this->page['title_tag']) ? $this->page['title_tag'] : '') . '</title>'."\n";
 		if (isset($this->page['meta_description']) && !empty($this->page['meta_description'])) {
