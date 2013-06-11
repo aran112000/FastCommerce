@@ -2,7 +2,7 @@
 /**
  * Class table_cache
  */
-final class table_cache {
+final class table_cache extends dependency {
 
 	/**
 	 * @var array
@@ -17,15 +17,6 @@ final class table_cache {
 	 * @var array
 	 */
 	protected $table_definitions = array();
-
-	/**
-	 * @param null $di
-	 */
-	public function __construct($di = NULL) {
-		if (!isset($this->di)) {
-			$this->di = ($di !== NULL ? $di : new di());
-		}
-	}
 
 	/**
 	 * @param $table

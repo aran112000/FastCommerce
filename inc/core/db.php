@@ -2,19 +2,15 @@
 /**
  * Class db
  */
-final class db {
+final class db extends dependency {
 	/**
 	 * @var PDO null
 	 */
 	public $conn = NULL;
 
 	/**
-	 * @param null $di
 	 */
-	public function __construct($di = NULL) {
-		if (!isset($this->di)) {
-			$this->di = ($di !== NULL ? $di : new di());
-		}
+	public function __init() {
 		$this->connect();
 	}
 
@@ -94,7 +90,15 @@ final class db {
 	 * @return bool|mixed
 	 */
 	public function fetch_class(PDOStatement $res, $class_name) {
-		return $resp = $res->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $class_name, array($this->di));
+		//return $resp = $res->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $class_name);
+		$res->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $class_name);
+		$responses = array();
+		while ($resp = $res->fetch()) {
+			$resp->set_di($this->di);
+			$responses[] = $resp;
+		}
+
+		return $responses;
 	}
 
 	/**

@@ -6,10 +6,9 @@ final class categories extends core_module {
 
 	/**
 	 * @param null $table
-	 * @param null $di
 	 */
-	public function __construct($table = NULL, $di) {
-		parent::__construct('cat', $di);
+	public function __init($table = NULL) {
+		parent::__init('cat');
 	}
 
 	/**

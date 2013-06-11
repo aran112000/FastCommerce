@@ -12,13 +12,19 @@ class core_module extends seo {
 	public $fn_path_number = 1;
 
 	/**
-	 * @param null $table
-	 * @param null $di
+	 * @var null
 	 */
-	public function __construct($table = NULL, $di = NULL) {
-		if (!isset($this->di)) {
-			$this->di = ($di !== NULL ? $di : new di());
-		}
+	protected $table = NULL;
+
+	/**
+	 * @var array
+	 */
+	protected $fields = array();
+
+	/**
+	 * @param null $table
+	 */
+	public function __init($table = NULL) {
 		if ($table !== NULL) {
 			$this->table = $table;
 			$this->fields = $this->di->table_cache->get_table_definition($this->table);

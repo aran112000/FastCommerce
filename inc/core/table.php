@@ -2,7 +2,7 @@
 /**
  * Class table
  */
-class table {
+class table extends dependency {
 
 	/**
 	 * Fields to not select by default from your DB, typically this should be live & deleted as these are
@@ -37,10 +37,7 @@ class table {
 	/**
 	 * Constructor
 	 */
-	public function __construct($di = NULL) {
-		if (!isset($this->di)) {
-			$this->di = ($di === NULL ? new di() : $di);
-		}
+	public function __init() {
 		$this->table = ($this->mysql_table_name !== NULL ? $this->mysql_table_name : get_called_class());
 		if (!empty($this->table)) {
 			$this->fields = $this->di->table_cache->get_table_definition($this->table);

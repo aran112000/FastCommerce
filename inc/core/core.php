@@ -2,7 +2,7 @@
 /**
  * Class core
  */
-final class core {
+final class core extends dependency {
 
 	/**
 	 * Holds all the page details required by the main theme (/theme/[theme_name]/index.php) to display the site content
@@ -12,16 +12,17 @@ final class core {
 	public $page = array();
 
 	/**
-	 * @var DI null
-	 */
-	public $di;
-
-	/**
 	 * Constructor
 	 */
-	public function __construct() {
+	public function __init() {
 		if (ajax) {
-			// TODO - Create ajax handler in PHP & JS
+			if ($this->di->get->class_exists($_REQUEST['act'])) {
+				$this->di->{$_REQUEST['act']} = new $_REQUEST['act'];
+				$this->di->{$_REQUEST['act']}->set_di($this->di);
+				if ($this->di->get->method_exists($this->di->{$_REQUEST['act']}, $_REQUEST['handler'])) {
+					$this->di->{$_REQUEST['act']}->$_REQUEST['handler']();
+				}
+			}
 		}
 	}
 
@@ -45,12 +46,16 @@ final class core {
 			}
 
 			$this->di->pages = function() {
-				return new pages('pages', $this->di);
+				$pages = new pages('pages');
+				$pages->set_di($this->di);
+
+				return $pages;
 			};
 
 			if (is_readable(root . '/inc/module/' . $module_name . '/' . $module_name . '.php')) {
 				if (!isset($this->di->$module_name)) {
-					$this->di->$module_name = new $module_name($module_name, $this->di);
+					$this->di->$module_name = new $module_name($module_name);
+					$this->di->$module_name->set_di($this->di);
 				}
 				if ($this->di->get->method_exists($this->di->$module_name, '__controller')) {
 					$this->page['body'] = $this->di->$module_name->__controller($url_parts, count($url_parts));
@@ -73,7 +78,8 @@ final class core {
 			if (is_readable(root . '/inc/theme/' . $theme . '/index.php')) {
 				$this->theme = $theme;
 				$this->di->theme_class = function() {
-					$theme = new theme($this->di);
+					$theme = new theme();
+					$theme->set_di($this->di);
 					return $theme;
 				};
 				require(root . '/inc/theme/' . $theme . '/index.php');
@@ -146,6 +152,9 @@ final class core {
 	 * Destructor
 	 */
 	public function __destruct() {
+		if (ajax) {
+			$this->di->ajaxify->do_serve();
+		}
 		$this->di->db->close();
 	}
 }

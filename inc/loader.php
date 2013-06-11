@@ -29,7 +29,7 @@ spl_autoload_register(function($class) {
 if (!defined('load_core') || !load_core) {
 	$di = new di();
 	$di->core = new core();
-	$di->core->di = $di;
+	$di->core->set_di($di);
 
 	if (!ajax) {
 		$di->core->get_theme();

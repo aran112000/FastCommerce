@@ -2,7 +2,7 @@
 /**
  * Class run
  */
-final class run {
+final class run extends dependency {
 
 	/**
 	 * @param $path

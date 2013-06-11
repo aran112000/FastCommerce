@@ -2,7 +2,7 @@
 /**
  * Class get
  */
-final class get {
+final class get extends dependency {
 
 	/**
 	 * @var array

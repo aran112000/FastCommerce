@@ -9,9 +9,10 @@ final class di {
 	 */
 	public $always_in_di = array(
 		'db',
-		'asset' => 'asset_manager',
 		'get',
 		'run',
+		'ajaxify',
+		'asset' => 'asset_manager',
 	);
 
 	/**
@@ -31,12 +32,10 @@ final class di {
 			foreach ($this->always_in_di as $register_name => $class_name) {
 				$register_name = (!is_numeric($register_name) ? $register_name : $class_name);
 				if (!isset($this->$register_name)) {
-					$this->add($register_name, function() use ($class_name) {
-						$class = new $class_name($this);
-						$class->di = $this;
+					$class = new $class_name();
+					$class->set_di($this);
 
-						return $class;
-					});
+					$this->add($register_name, $class);
 				}
 			}
 		}
@@ -50,7 +49,7 @@ final class di {
 	public function __get($name) {
 		if (isset($this->registrants[$name])) {
 			$val = $this->registrants[$name];
-			if (gettype($val) == 'object' && is_callable($val)) {
+			if (is_callable($val)) {
 				// Functions stored within DI aren't executed unless required to save on memory and once executed once the resulting value is stored in it's place
 				$val = $val();
 				$this->registrants[$name] = $val;
@@ -61,6 +60,7 @@ final class di {
 		// If $name is a module or object then we will auto create it
 		if (is_readable(root . '/inc/module/' . $name . '/' . $name . '.php') || is_readable(root . '/inc/object/' . $name . '.php') || is_readable(root . '/inc/core/' . $name . '.php')) {
 			$val = new $name($this);
+			$val->set_di($this);
 			$this->add($name, $val);
 
 			return $val;

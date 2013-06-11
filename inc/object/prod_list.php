@@ -2,16 +2,7 @@
 /**
  * Class prod_list
  */
-final class prod_list {
-
-	/**
-	 * Construct
-	 */
-	public function __construct($di = NULL) {
-		if (!isset($this->di)) {
-			$this->di = ($di !== NULL ? $di : new di());
-		}
-	}
+final class prod_list extends dependency {
 
 	/**
 	 * @param array $options

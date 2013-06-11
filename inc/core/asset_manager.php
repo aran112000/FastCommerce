@@ -4,7 +4,7 @@
  *
  * This class is intended to be extended for those using CDNs
  */
-class asset_manager {
+class asset_manager extends dependency {
 
 	/**
 	 * @param $asset

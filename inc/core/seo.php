@@ -5,7 +5,7 @@
  * Called by default at the end of the core_module controller - Responsible for the following:
  * Title Tags, Meta Descriptions, Meta Keywords (disabled by default), Robots : follow/nofollow.. & Social tags (Facebook OG & Tweet Cards)
  */
-class seo {
+class seo extends dependency {
 
 	/**
 	 * @param $path_parts

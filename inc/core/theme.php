@@ -2,7 +2,7 @@
 /**
  * Class theme
  */
-final class theme {
+final class theme extends dependency {
 
 	/**
 	 * @var string
@@ -15,10 +15,8 @@ final class theme {
 	private $theme_settings = array();
 
 	/**
-	 * @param null $di
 	 */
-	public function __construct($di = NULL) {
-		$this->di = ($di !== NULL ? $di : new di());
+	public function __init() {
 		$this->base_theme_path = '/inc/theme/' . $this->di->get->setting('theme');
 		$this->get_theme_setting();
 		$this->set_resources();
