@@ -37,7 +37,7 @@ class core_module extends seo {
 
 		if (uri == 404) {
 			$this->di->run->http_status(404);
-			return $this->get_view('404');
+			$this->get_view('404');
 		}
 	}
 
