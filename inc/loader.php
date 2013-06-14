@@ -54,6 +54,6 @@ if (!defined('load_core') || load_core) {
 	$di->core->set_di($di);
 
 	if (!ajax) {
-		$di->core->get_theme();
+		$di->core->load_theme();
 	}
 }

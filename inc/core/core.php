@@ -36,6 +36,9 @@ class core extends dependency {
 	 */
 	public $inline_js = array();
 
+	/**
+	 *
+	 */
 	public function __controller() {
 		$url_parts = $this->get_url_parts();
 		if (!empty($url_parts)) {
@@ -68,25 +71,30 @@ class core extends dependency {
 		}
 	}
 
+
 	/**
-	 * @throws Exception
+	 * @return bool
 	 */
-	public function get_theme() {
+	public function load_theme() {
 		$this->__controller();
 		$theme = $this->di->get->setting('theme', 'buyshop');
 		if (!empty($theme)) {
-			if (is_readable(root . '/inc/theme/' . $theme . '/index.php')) {
+			$theme_dir = root . $this->di->asset->get_theme_dir();
+			if (is_readable($theme_dir . $theme . '/index.php')) {
 				$this->theme = $theme;
 				$this->di->theme_class = function() {
 					$theme = new theme();
 					$theme->set_di($this->di);
 					return $theme;
 				};
-				require(root . '/inc/theme/' . $theme . '/index.php');
+				require($theme_dir . $this->theme . '/index.php');
+
+				return false;
 			}
-		} else {
-			throw new Exception('No site theme specified');
 		}
+
+		trigger_error('Please specify a valid theme & make sure the directory is readable');
+		return false;
 	}
 
 	/**

@@ -17,6 +17,11 @@ class asset_manager extends dependency {
 	private $object_dir = '/inc/object/';
 
 	/**
+	 * @var string
+	 */
+	private $theme_dir = '/inc/theme/';
+
+	/**
 	 * @param $asset
 	 * @return mixed
 	 */
@@ -66,5 +71,27 @@ class asset_manager extends dependency {
 	 */
 	public function get_object_dir() {
 		return $this->object_dir;
+	}
+
+	/**
+	 * @param $path
+	 * @return bool
+	 */
+	public function set_theme_dir($path) {
+		$path = str_replace(root, '', $path);
+		if (is_readable(root . $path)) {
+			$this->theme_dir = rtrim($path, '/');
+			return true;
+		}
+
+		trigger_error('Please ensure the theme path you\'ve specified is both valid & readable');
+		return false;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_theme_dir() {
+		return $this->theme_dir;
 	}
 }
