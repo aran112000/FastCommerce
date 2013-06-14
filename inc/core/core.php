@@ -5,6 +5,11 @@
 class core extends dependency {
 
 	/**
+	 * @var string
+	 */
+	public $page_prefix = '/';
+
+	/**
 	 * Holds all the page details required by the main theme (/theme/[theme_name]/index.php) to display the site content
 	 *
 	 * @var array
@@ -48,12 +53,12 @@ class core extends dependency {
 				$module_name = $module_aliases[$module_name];
 			}
 
-			$this->di->pages = function() {
+			$this->di->add('pages', function() {
 				$pages = new pages('pages');
 				$pages->set_di($this->di);
 
 				return $pages;
-			};
+			});
 
 			if (is_readable(root . '/inc/module/' . $module_name . '/' . $module_name . '.php')) {
 				if (!isset($this->di->$module_name)) {
@@ -77,20 +82,9 @@ class core extends dependency {
 	 */
 	public function load_theme() {
 		$this->__controller();
-		$theme = $this->di->get->setting('theme', 'buyshop');
-		if (!empty($theme)) {
-			$theme_dir = root . $this->di->asset->get_theme_dir();
-			if (is_readable($theme_dir . $theme . '/index.php')) {
-				$this->theme = $theme;
-				$this->di->theme_class = function() {
-					$theme = new theme();
-					$theme->set_di($this->di);
-					return $theme;
-				};
-				require($theme_dir . $this->theme . '/index.php');
-
-				return false;
-			}
+		$theme = $this->di->theme->get_theme();
+		if ($theme) {
+			return require(root . $this->di->asset->get_theme_dir() . $theme . '/index.php');
 		}
 
 		trigger_error('Please specify a valid theme & make sure the directory is readable');
@@ -100,7 +94,7 @@ class core extends dependency {
 	/**
 	 * @return array
 	 */
-	private function get_url_parts() {
+	public function get_url_parts() {
 		return explode('/', substr(uri, 1, strlen(uri)));
 	}
 
@@ -113,7 +107,7 @@ class core extends dependency {
 		$html .= '<head>'."\n";
 		$html .= "\t".'<meta charset="' . $this->di->get->conf('site_settings', 'charset', '') . '" />'."\n";
 		$html .= "\t".'<link rel="dns-prefetch" href="http' . (ssl ? 's' : '') . '://' . host . '" />'."\n";
-		$html .= "\t".'<link rel="stylesheet" type="text/css" href="' . $this->di->theme_class->get_path('/css/style.css') . '" />'."\n";
+		$html .= "\t".'<link rel="stylesheet" type="text/css" href="' . $this->di->theme->get_path('/css/style.css') . '" />'."\n";
 		$html .= "\t".'<title>' . (isset($this->page['title_tag']) ? $this->page['title_tag'] : '') . '</title>'."\n";
 		if (isset($this->page['meta_description']) && !empty($this->page['meta_description'])) {
 			$html .= "\t".'<meta name="description" content="' . $this->page['meta_description'] . '" />'."\n";
@@ -141,18 +135,26 @@ class core extends dependency {
 	 * @return string
 	 */
 	public function get_html_footer() {
-		$html = '</body>'."\n";
-
-		$html .= '<script>';
-		$html .= 'function __ls(b,c){(function(){if(0!=b.length){var d=b.shift(),e=arguments.callee,a=document.createElement(\'script\');a.src=d;a.onload=a.onreadystatechange=function(){a.onreadystatechange=a.onload=null;e()};(document.getElementsByTagName(\'head\')[0]||document.body).appendChild(a)}else c&&c()})()};__ls(["' . implode('","', $this->footer_js_files) . '"]';
-		if (!empty($this->inline_js)) {
-			$html .= ',function(){$(document).ready(function(){';
+		$html = '';
+		if (!empty($this->footer_js_files)) {
+			$html .= '<script>';
+			$html .= 'function __ls(b,c){(function(){if(0!=b.length){var d=b.shift(),e=arguments.callee,a=document.createElement(\'script\');a.src=d;a.onload=a.onreadystatechange=function(){a.onreadystatechange=a.onload=null;e()};(document.getElementsByTagName(\'head\')[0]||document.body).appendChild(a)}else c&&c()})()};__ls([' . "\n" . '"' . implode('",'."\n".'"', $this->footer_js_files) . '"'."\n".']';
+			if (!empty($this->inline_js)) {
+				$html .= ',function(){$(document).ready(function(){';
+				$html .= implode("\n", $this->inline_js);
+				$html .= '});});';
+			} else {
+				$html .= ');';
+			}
+			$html .= '</script>'."\n";
+		} else if (!empty($this->inline_js)) {
+			$html .= '<script>'."\n";
+			$html .= '$(document).ready(function(){'."\n";
 			$html .= implode("\n", $this->inline_js);
-			$html .= '});});';
-		} else {
-			$html .= ');';
+			$html .= '});'."\n";
+			$html .= '</script>'."\n";
 		}
-		$html .= '</script>'."\n";
+		$html .= '</body>'."\n";
 		$html .= '</html>'."\n";
 
 		return $html;
