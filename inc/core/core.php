@@ -2,7 +2,7 @@
 /**
  * Class core
  */
-final class core extends dependency {
+class core extends dependency {
 
 	/**
 	 * Holds all the page details required by the main theme (/theme/[theme_name]/index.php) to display the site content
