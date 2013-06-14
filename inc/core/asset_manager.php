@@ -36,7 +36,7 @@ class asset_manager extends dependency {
 	public function set_module_dir($path) {
 		$path = str_replace(root, '', $path);
 		if (is_readable(root . $path)) {
-			$this->module_dir = rtrim($path, '/');
+			$this->module_dir = rtrim($path, '/') . '/';
 			return true;
 		}
 
@@ -58,7 +58,7 @@ class asset_manager extends dependency {
 	public function set_object_dir($path) {
 		$path = str_replace(root, '', $path);
 		if (is_readable(root . $path)) {
-			$this->object_dir = rtrim($path, '/');
+			$this->object_dir = rtrim($path, '/') . '/';
 			return true;
 		}
 
@@ -80,7 +80,7 @@ class asset_manager extends dependency {
 	public function set_theme_dir($path) {
 		$path = str_replace(root, '', $path);
 		if (is_readable(root . $path)) {
-			$this->theme_dir = rtrim($path, '/');
+			$this->theme_dir = rtrim($path, '/') . '/';
 			return true;
 		}
 
