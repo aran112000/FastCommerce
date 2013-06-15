@@ -17,8 +17,8 @@ http://fastcommerce.myjetbrains.com/youtrack/rest/agile/FC/sprint/Unscheduled
 What platforms have been tested?
 ===============================
 We are currently developing and testing as we go in both Linux & Windows environments, below is the key versions we're using:
-OS          : CentOS 6.3 (Final) & Window 7 (using Winginx)
-Web Server  : Nginx (Apache should work but is currently untested)
-PHP         : PHP 5.4.11 & PHP-FPM 5.4.15
-DB          : MySQL 5.5.31 & 5.1.62
-Caching     : Memcached 1.4.15
+ - OS          : CentOS 6.3 (Final) & Window 7 (using Winginx)
+ - Web Server  : Nginx (Apache should work but is currently untested)
+ - PHP         : PHP 5.4.11 & PHP-FPM 5.4.15
+ - DB          : MySQL 5.5.31 & 5.1.62
+ - Caching     : Memcached 1.4.15
