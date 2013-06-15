@@ -1,0 +1,29 @@
+AddType text/cache-manifest .appcache
+
+ErrorDocument 404 /404
+
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} -f [NC,OR]
+RewriteCond %{REQUEST_FILENAME} -d [NC,OR]
+RewriteCond %{REQUEST_FILENAME} -l [NC]
+RewriteRule .* - [L]
+
+RewriteRule (.*) index.php
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access 1 year"
+    ExpiresByType image/jpeg "access 1 year"
+    ExpiresByType image/gif "access 1 year"
+    ExpiresByType image/png "access 1 year"
+    ExpiresByType text/css "access 1 month"
+    ExpiresByType application/vnd.bw-fontobject "access 1 year"
+    ExpiresByType application/x-font-ttf "access 1 year"
+    ExpiresByType application/x-woff "access 1 year"
+    ExpiresByType application/pdf "access 1 month"
+    ExpiresByType text/x-javascript "access 1 month"
+    ExpiresByType application/x-shockwave-flash "access 1 month"
+    ExpiresByType image/x-icon "access 1 year"
+    ExpiresDefault "access 3 weeks"
+</IfModule>
