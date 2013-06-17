@@ -16,7 +16,7 @@ final class pages extends core_module {
 	 * @param $path_count
 	 * @return bool|string
 	 */
-	public function __controller($path_parts, $path_count) {
+	public function __controller(array $path_parts, $path_count) {
 		if ($path_count > 2) {
 			$this->di->run->header_redir('/' . $path_parts[0], 301);
 		}
@@ -48,15 +48,24 @@ final class pages extends core_module {
 	 */
 	public function get_nav($id, array $options = array()) {
 		$html = '';
-		$pages = $this->di->page->do_retrieve(array(), array($options));
-		$pnum = count($pages);
+		$module_groups = $this->di->cms_module_group->do_retrieve(array(), array($options));
+		$pnum = count($module_groups);
 		if ($pnum > 0) {
 			$i = 0;
 			$html .= '<nav id="' . $id . '">'."\n";
 			$html .= '<ul>'."\n";
-			foreach ($pages as $page) { $i++;
-				$url = $page->get_url();
-				$html .= '<li' . ($i == $pnum ? ' class="last"' : '') . '><a href="' . $url . '" title="' . $page->title . '"' . ($url == uri ? ' class="sel"' : '') . '><span>' . (!empty($page->nav_title) ? $page->nav_title : $page->title) . '</span></a></li>'."\n";
+			foreach ($module_groups as $module_group) { $i++;
+				$html .= '<li' . ($i == $pnum ? ' class="last"' : '') . '>'."\n";
+				$html .= '<a href="#" title="' . $module_group->title . '">' . (!empty($module_group->nav_title) ? $module_group->nav_title : $module_group->title) . '</a>'."\n";
+				$modules = $this->di->cms_module->do_retrieve(array('table_name', 'title'), array('where' => 'mgid=:mgid', 'params' => array('mgid' => $module_group->mgid)));
+				if (!empty($modules)) {
+					$html .= '<ul>'."\n";
+					foreach ($modules as $module) {
+						$html .= '<li><a href="' . $this->di->core->page_prefix . 'module/' . $module->table_name . '">' . $module->title . '</a></li>'."\n";
+					}
+					$html .= '</ul>'."\n";
+				}
+				$html .= '</li>'."\n";
 			}
 			$html .= '</ul>'."\n";
 			$html .= '</nav>'."\n";
