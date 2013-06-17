@@ -27,7 +27,7 @@ class table extends dependency {
 	/**
 	 * @var array
 	 */
-	protected $fields = array();
+	public $fields = array();
 
 	/**
 	 * @var string
