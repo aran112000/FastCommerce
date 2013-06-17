@@ -9,16 +9,6 @@ var webApp = function() {
     /* Initialization UI Code */
     var uiInit = function () {
 
-        // Add the  correct copyright year at the footer
-        var yearCopy = $('#year-copy'),
-            d = new Date();
-
-        if (d.getFullYear() === 2013) {
-            yearCopy.html('2013');
-        } else {
-            yearCopy.html('2013-' + d.getFullYear());
-        }
-
         // Set min-height to #page-content, so that footer is visible at the bottom if there is not enough content
         var pageContent = $('#page-content');
 
