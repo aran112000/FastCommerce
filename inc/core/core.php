@@ -42,25 +42,32 @@ class core extends dependency {
 	public $inline_js = array();
 
 	/**
+	 * @return mixed
+	 */
+	protected function get_module_aliases() {
+		return $this->di->get->conf('module_aliases');
+	}
+
+	/**
 	 *
 	 */
 	public function __controller() {
 		$url_parts = $this->get_url_parts();
 		if (!empty($url_parts)) {
 			$module_name = $url_parts[0];
-			$module_aliases = $this->di->get->conf('module_aliases');
+			$module_aliases = $this->get_module_aliases();
 			if (isset($module_aliases[$module_name])) {
 				$module_name = $module_aliases[$module_name];
 			}
 
-			$this->di->add('pages', function() {
+			$this->di->set('pages', function() {
 				$pages = new pages('pages');
 				$pages->set_di($this->di);
 
 				return $pages;
 			});
 
-			if (is_readable(root . '/inc/module/' . $module_name . '/' . $module_name . '.php')) {
+			if (is_readable(root . $this->di->asset->get_module_dir() . $module_name . '/' . $module_name . '.php')) {
 				if (!isset($this->di->$module_name)) {
 					$this->di->$module_name = new $module_name($module_name);
 					$this->di->$module_name->set_di($this->di);
