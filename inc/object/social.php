@@ -1,0 +1,7 @@
+<?
+/**
+ * Class social
+ */
+class social {
+
+}
