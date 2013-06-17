@@ -266,9 +266,7 @@
 		</form>
 		<!-- END Sidebar search -->
 
-		<!-- Primary Navigation -->
 		<?=$this->di->pages->get_nav('primary-nav', array('where' => 'nav=1', 'span' => false))?>
-		<!-- END Primary Navigation -->
 	</aside>
 	<!-- END Sidebar -->
 	<!-- Page Content -->
