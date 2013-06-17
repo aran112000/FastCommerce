@@ -8,6 +8,7 @@ define('ssl', (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on'
 define('user_agent', (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'Unknown User Agent'));
 define('debug', (strstr(ip, '127.0.0.1')));
 define('ajax', (isset($_REQUEST['act']) && !empty($_REQUEST['act'])));
+define('cms', true);
 define('gc_support', function_exists('gc_enable'));
 if (gc_support && !gc_enabled()) {
 	gc_enable();
