@@ -102,14 +102,20 @@ final class di {
 
 			// If $name is a module or object then we will auto create it
 			if ((isset($this->asset) && (is_readable(root . $this->asset->get_module_dir() . $name . '/' . $name . '.php') || is_readable(root . $this->asset->get_object_dir() . $name . '.php'))) || is_readable(root . '/inc/core/' . $name . '.php')) {
-				$val = new $name($this);
+				$val = new $name();
 				$val->set_di($this);
 				$this->set($name, $val);
 
 				return $val;
 			}
 
-			trigger_error($name . ' not set, please check isset() before attempting to fetch');
+			$val = new table();
+			$val->mysql_table_name = $name;
+			$val->set_di($this);
+			$this->set($name, $val);
+
+			return $val;
+
 		} else {
 			trigger_error('Please supply a valid name to ' . __METHOD__);
 		}
