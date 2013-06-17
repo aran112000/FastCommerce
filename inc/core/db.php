@@ -90,10 +90,16 @@ final class db extends dependency {
 	 * @return bool|mixed
 	 */
 	public function fetch_class(PDOStatement $res, $class_name) {
-		//return $resp = $res->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $class_name);
-		$res->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $class_name);
+		$class = $class_name;
+		if (!$this->di->get->class_exists($class)) {
+			$class = 'table';
+		}
+		$res->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $class);
 		$responses = array();
 		while ($resp = $res->fetch()) {
+			if ($class != $class_name) {
+				$resp->mysql_table_name = $class_name;
+			}
 			$resp->set_di($this->di);
 			$responses[] = $resp;
 		}
