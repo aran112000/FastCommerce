@@ -11,7 +11,7 @@ class seo extends dependency {
 	 * @param $path_parts
 	 * @param $path_count
 	 */
-	public function __controller($path_parts, $path_count) {
+	public function __controller(array $path_parts, $path_count) {
 		$this->set_page_title();
 		$this->set_meta_description();
 		$this->set_meta_keywords();
