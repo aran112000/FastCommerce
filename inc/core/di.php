@@ -35,7 +35,7 @@ final class di {
 					$class = new $class_name();
 					$class->set_di($this);
 
-					$this->add($register_name, $class);
+					$this->set($register_name, $class);
 				}
 			}
 		}
@@ -47,26 +47,7 @@ final class di {
 	 * @throws Exception
 	 */
 	public function __get($name) {
-		if (isset($this->registrants[$name])) {
-			$val = $this->registrants[$name];
-			if (is_callable($val)) {
-				// Functions stored within DI aren't executed unless required to save on memory and once executed once the resulting value is stored in it's place
-				$val = $val();
-				$this->registrants[$name] = $val;
-			}
-			return $val;
-		}
-
-		// If $name is a module or object then we will auto create it
-		if (is_readable(root . '/inc/module/' . $name . '/' . $name . '.php') || is_readable(root . '/inc/object/' . $name . '.php') || is_readable(root . '/inc/core/' . $name . '.php')) {
-			$val = new $name($this);
-			$val->set_di($this);
-			$this->add($name, $val);
-
-			return $val;
-		}
-
-		throw new Exception($name . ' not set, please check isset() before attempting to fetch');
+		return $this->get($name);
 	}
 
 	/**
@@ -74,7 +55,7 @@ final class di {
 	 * @param $value
 	 */
 	public function __set($name, $value) {
-		$this->add($name, $value);
+		$this->set($name, $value);
 	}
 
 	/**
@@ -98,7 +79,41 @@ final class di {
 	 * @param $name
 	 * @param $value
 	 */
-	public function add($name, $value) {
+	public function set($name, $value) {
 		$this->registrants[$name] = $value;
+	}
+
+	/**
+	 * @param $name
+	 * @return mixed
+	 * @throws Exception
+	 */
+	public function get($name) {
+		if (!empty($name)) {
+			if (isset($this->registrants[$name])) {
+				$val = $this->registrants[$name];
+				if (is_callable($val)) {
+					// Functions stored within DI aren't executed unless required to save on memory and once executed once the resulting value is stored in it's place
+					$val = $val();
+					$this->registrants[$name] = $val;
+				}
+				return $val;
+			}
+
+			// If $name is a module or object then we will auto create it
+			if ((isset($this->asset) && (is_readable(root . $this->asset->get_module_dir() . $name . '/' . $name . '.php') || is_readable(root . $this->asset->get_object_dir() . $name . '.php'))) || is_readable(root . '/inc/core/' . $name . '.php')) {
+				$val = new $name($this);
+				$val->set_di($this);
+				$this->set($name, $val);
+
+				return $val;
+			}
+
+			trigger_error($name . ' not set, please check isset() before attempting to fetch');
+		} else {
+			trigger_error('Please supply a valid name to ' . __METHOD__);
+		}
+
+		return false;
 	}
 }
