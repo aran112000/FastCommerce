@@ -1,19 +1,21 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.0
+-- version 4.0.4
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Jun 09, 2013 at 07:14 PM
+-- Host: 127.0.0.1:3306
+-- Generation Time: Jun 18, 2013 at 02:37 AM
 -- Server version: 5.1.62-community
 -- PHP Version: 5.3.21
 
 SET FOREIGN_KEY_CHECKS=0;
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 --
 -- Database: `ecom`
 --
+CREATE DATABASE IF NOT EXISTS `ecom` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `ecom`;
 
 -- --------------------------------------------------------
 
@@ -36,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `cat` (
   KEY `live` (`live`,`deleted`),
   KEY `parent_cid` (`parent_cid`),
   KEY `deleted` (`deleted`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `cat`
@@ -50,6 +52,59 @@ INSERT INTO `cat` (`cid`, `parent_cid`, `live`, `deleted`, `created`, `ts`, `tit
 (5, 0, 1, 0, '0000-00-00 00:00:00', '2013-06-08 23:05:00', 'Test Category 5', 'test-category-5', ''),
 (6, 0, 1, 0, '0000-00-00 00:00:00', '2013-06-08 23:05:03', 'Test Category 6', 'test-category-6', ''),
 (7, 1, 1, 0, '0000-00-00 00:00:00', '2013-06-08 23:08:27', 'Test Category 7', 'test-category-7', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cms_module`
+--
+
+DROP TABLE IF EXISTS `cms_module`;
+CREATE TABLE IF NOT EXISTS `cms_module` (
+  `mid` int(3) NOT NULL AUTO_INCREMENT,
+  `mgid` int(3) NOT NULL,
+  `live` tinyint(1) NOT NULL DEFAULT '1',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `title` varchar(100) NOT NULL,
+  `table_name` varchar(100) NOT NULL,
+  `primary_key` varchar(15) NOT NULL,
+  PRIMARY KEY (`mid`),
+  KEY `mgid` (`mgid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `cms_module`
+--
+
+INSERT INTO `cms_module` (`mid`, `mgid`, `live`, `deleted`, `title`, `table_name`, `primary_key`) VALUES
+(1, 1, 1, 0, 'Pages', 'page', 'pid'),
+(2, 2, 1, 0, 'Products', 'prod', 'pid'),
+(3, 2, 1, 0, 'Categories', 'cat', 'cid');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cms_module_group`
+--
+
+DROP TABLE IF EXISTS `cms_module_group`;
+CREATE TABLE IF NOT EXISTS `cms_module_group` (
+  `mgid` int(3) NOT NULL AUTO_INCREMENT,
+  `parent_mgid` int(3) NOT NULL,
+  `live` tinyint(1) NOT NULL DEFAULT '1',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `title` varchar(100) NOT NULL,
+  PRIMARY KEY (`mgid`),
+  KEY `parent_mgid` (`parent_mgid`,`live`,`deleted`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `cms_module_group`
+--
+
+INSERT INTO `cms_module_group` (`mgid`, `parent_mgid`, `live`, `deleted`, `title`) VALUES
+(1, 0, 1, 0, 'Page Management'),
+(2, 0, 1, 0, 'eCommerce');
 
 -- --------------------------------------------------------
 
@@ -72,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `page` (
   PRIMARY KEY (`pid`),
   KEY `parent_pid` (`parent_pid`,`live`,`deleted`),
   KEY `nav` (`nav`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `page`
@@ -108,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `prod` (
   KEY `fn` (`fn`),
   KEY `deleted` (`deleted`),
   KEY `stock` (`stock`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `prod`
@@ -131,8 +186,9 @@ CREATE TABLE IF NOT EXISTS `prod_link_cat` (
   `link_cid` int(5) NOT NULL,
   `position` int(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`link_id`),
-  KEY `pid` (`pid`,`link_cid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+  KEY `pid` (`pid`,`link_cid`),
+  KEY `link_cid` (`link_cid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `prod_link_cat`
@@ -153,14 +209,31 @@ CREATE TABLE IF NOT EXISTS `setting` (
   `key` varchar(30) NOT NULL,
   `value` varchar(255) NOT NULL,
   UNIQUE KEY `key` (`key`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `setting`
 --
 
 INSERT INTO `setting` (`key`, `value`) VALUES
-('site_name', 'Ecommerce Site'),
 ('site_email', 'cdtreeks@gmail.com'),
+('site_name', 'Ecommerce Site'),
 ('theme', 'buyshop');
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `cms_module`
+--
+ALTER TABLE `cms_module`
+ADD CONSTRAINT `cms_module_ibfk_1` FOREIGN KEY (`mgid`) REFERENCES `cms_module_group` (`mgid`) ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `prod_link_cat`
+--
+ALTER TABLE `prod_link_cat`
+ADD CONSTRAINT `prod_link_cat_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `prod` (`pid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+ADD CONSTRAINT `prod_link_cat_ibfk_2` FOREIGN KEY (`link_cid`) REFERENCES `cat` (`cid`) ON DELETE CASCADE ON UPDATE NO ACTION;
 SET FOREIGN_KEY_CHECKS=1;
