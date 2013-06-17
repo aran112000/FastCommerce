@@ -17,7 +17,7 @@ final class categories extends core_module {
 	 *
 	 * @return bool|string
 	 */
-	public function __controller($path_parts, $path_count) {
+	public function __controller(array $path_parts, $path_count) {
 		if ($path_count == 1) {
 			$this->di->pages->__controller($path_parts, $path_count);
 			$this->current = $this->di->pages->current;

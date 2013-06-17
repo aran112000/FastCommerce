@@ -16,7 +16,7 @@ final class pages extends core_module {
 	 * @param $path_count
 	 * @return bool|string
 	 */
-	public function __controller($path_parts, $path_count) {
+	public function __controller(array $path_parts, $path_count) {
 		if ($path_count > 2) {
 			$this->di->run->header_redir('/' . $path_parts[0], 301);
 		}
