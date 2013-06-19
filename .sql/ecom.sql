@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 18, 2013 at 02:37 AM
+-- Generation Time: Jun 20, 2013 at 03:05 AM
 -- Server version: 5.1.62-community
 -- PHP Version: 5.3.21
 
@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS `cat` (
   PRIMARY KEY (`cid`),
   KEY `live` (`live`,`deleted`),
   KEY `parent_cid` (`parent_cid`),
-  KEY `deleted` (`deleted`)
+  KEY `deleted` (`deleted`),
+  KEY `parent_cid_2` (`live`,`parent_cid`,`deleted`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
@@ -70,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `cms_module` (
   `primary_key` varchar(15) NOT NULL,
   PRIMARY KEY (`mid`),
   KEY `mgid` (`mgid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `cms_module`
@@ -79,7 +80,8 @@ CREATE TABLE IF NOT EXISTS `cms_module` (
 INSERT INTO `cms_module` (`mid`, `mgid`, `live`, `deleted`, `title`, `table_name`, `primary_key`) VALUES
 (1, 1, 1, 0, 'Pages', 'page', 'pid'),
 (2, 2, 1, 0, 'Products', 'prod', 'pid'),
-(3, 2, 1, 0, 'Categories', 'cat', 'cid');
+(3, 2, 1, 0, 'Categories', 'cat', 'cid'),
+(4, 3, 1, 0, 'MySQL Table Indexes', '_mysql_table_index_recommendations', 'id');
 
 -- --------------------------------------------------------
 
@@ -90,13 +92,13 @@ INSERT INTO `cms_module` (`mid`, `mgid`, `live`, `deleted`, `title`, `table_name
 DROP TABLE IF EXISTS `cms_module_group`;
 CREATE TABLE IF NOT EXISTS `cms_module_group` (
   `mgid` int(3) NOT NULL AUTO_INCREMENT,
-  `parent_mgid` int(3) NOT NULL,
+  `parent_mgid` int(3) NOT NULL DEFAULT '0',
   `live` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `title` varchar(100) NOT NULL,
   PRIMARY KEY (`mgid`),
   KEY `parent_mgid` (`parent_mgid`,`live`,`deleted`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `cms_module_group`
@@ -104,7 +106,8 @@ CREATE TABLE IF NOT EXISTS `cms_module_group` (
 
 INSERT INTO `cms_module_group` (`mgid`, `parent_mgid`, `live`, `deleted`, `title`) VALUES
 (1, 0, 1, 0, 'Page Management'),
-(2, 0, 1, 0, 'eCommerce');
+(2, 0, 1, 0, 'eCommerce'),
+(3, 0, 1, 0, 'Administration');
 
 -- --------------------------------------------------------
 
@@ -162,7 +165,8 @@ CREATE TABLE IF NOT EXISTS `prod` (
   KEY `live` (`live`,`deleted`),
   KEY `fn` (`fn`),
   KEY `deleted` (`deleted`),
-  KEY `stock` (`stock`)
+  KEY `stock` (`stock`),
+  KEY `pid` (`pid`,`live`,`deleted`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
@@ -186,8 +190,7 @@ CREATE TABLE IF NOT EXISTS `prod_link_cat` (
   `link_cid` int(5) NOT NULL,
   `position` int(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`link_id`),
-  KEY `pid` (`pid`,`link_cid`),
-  KEY `link_cid` (`link_cid`)
+  UNIQUE KEY `link_cid_pid` (`link_cid`,`pid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
@@ -220,6 +223,57 @@ INSERT INTO `setting` (`key`, `value`) VALUES
 ('site_name', 'Ecommerce Site'),
 ('theme', 'buyshop');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `_mysql_table_index_recommendations`
+--
+
+DROP TABLE IF EXISTS `_mysql_table_index_recommendations`;
+CREATE TABLE IF NOT EXISTS `_mysql_table_index_recommendations` (
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `tbl` varchar(40) NOT NULL,
+  `index_recommendation` varchar(255) NOT NULL,
+  `count` int(6) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `table` (`tbl`),
+  UNIQUE KEY `id` (`id`,`tbl`,`index_recommendation`),
+  KEY `index_recommendation` (`index_recommendation`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Log of MySQL index recommendations designed to have the freq' AUTO_INCREMENT=60 ;
+
+--
+-- Dumping data for table `_mysql_table_index_recommendations`
+--
+
+INSERT INTO `_mysql_table_index_recommendations` (`id`, `tbl`, `index_recommendation`, `count`) VALUES
+(1, 'cat', 'live,parent_cid,deleted,parent_cid_2', 41),
+(4, 'prod', 'PRIMARY,live,deleted,pid', 12),
+(5, 'prod_link_cat', 'pid,link_cid,pid_2', 6);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `_mysql_table_uses`
+--
+
+DROP TABLE IF EXISTS `_mysql_table_uses`;
+CREATE TABLE IF NOT EXISTS `_mysql_table_uses` (
+  `tbl` varchar(40) NOT NULL,
+  `uses` int(6) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`tbl`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the number of times a MySQL table us accessed via fro';
+
+--
+-- Dumping data for table `_mysql_table_uses`
+--
+
+INSERT INTO `_mysql_table_uses` (`tbl`, `uses`) VALUES
+('cat', 45),
+('page', 50),
+('prod', 16),
+('prod_link_cat', 12),
+('setting', 33);
+
 --
 -- Constraints for dumped tables
 --
@@ -234,6 +288,5 @@ ADD CONSTRAINT `cms_module_ibfk_1` FOREIGN KEY (`mgid`) REFERENCES `cms_module_g
 -- Constraints for table `prod_link_cat`
 --
 ALTER TABLE `prod_link_cat`
-ADD CONSTRAINT `prod_link_cat_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `prod` (`pid`) ON DELETE CASCADE ON UPDATE NO ACTION,
-ADD CONSTRAINT `prod_link_cat_ibfk_2` FOREIGN KEY (`link_cid`) REFERENCES `cat` (`cid`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ADD CONSTRAINT `prod_link_cat_ibfk_1` FOREIGN KEY (`link_cid`) REFERENCES `cat` (`cid`) ON DELETE CASCADE ON UPDATE NO ACTION;
 SET FOREIGN_KEY_CHECKS=1;
