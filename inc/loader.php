@@ -14,9 +14,9 @@ if (gc_support && !gc_enabled()) {
 	gc_enable();
 }
 
-// Set PHP error reporting
+// Set PHP error reporting - TODO - Add error handler override so that only `debug` users see errors, others need to be logged
+ini_set('display_errors', E_ALL);
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 // Crucial autoloaders
 spl_autoload_register(function($class) {
