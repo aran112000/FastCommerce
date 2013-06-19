@@ -10,6 +10,11 @@ define('debug', (strstr(ip, '127.0.0.1')));
 define('ajax', (isset($_REQUEST['act']) && !empty($_REQUEST['act'])));
 define('cms', false);
 define('gc_support', function_exists('gc_enable'));
+if (debug) {
+	// Capture MySQL query times for current page load
+	define('mysql_benchmark', true);
+	define('show_mysql_benchmark', true); // Output from core->get_html_footer() if true
+}
 if (gc_support && !gc_enabled()) {
 	gc_enable();
 }
