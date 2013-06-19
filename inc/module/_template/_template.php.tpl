@@ -1,7 +1,6 @@
 <?
 /**
- * Class {{_template}}
+ * Class __template__
  */
-class {{_template}} extends core_module {
-
+class __template__ extends core_module {
 }
