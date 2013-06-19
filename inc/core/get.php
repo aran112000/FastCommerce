@@ -237,4 +237,30 @@ final class get extends dependency {
 
 		return $term;
 	}
+
+	/**
+	 * @param array $attributes
+	 * @return string
+	 */
+	public function attributes(array $attributes) {
+		$attribute = '';
+		foreach ($attributes as $attr => $values) {
+			$attribute .= ' ' . $this->attribute($attr, $values);
+		}
+
+		return $attribute;
+	}
+
+	/**
+	 * @param  string        $attribute
+	 * @param  array|string  $values
+	 * @return string
+	 */
+	public function attribute($attribute, $values) {
+		if (is_array($values)) {
+			return $attribute . '="' . trim(implode(' ', $values)) . '"';
+		} else {
+			return $attribute . '="' . trim($values) . '"';
+		}
+	}
 }
