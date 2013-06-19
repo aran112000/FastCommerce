@@ -60,13 +60,6 @@ class core extends dependency {
 				$module_name = $module_aliases[$module_name];
 			}
 
-			$this->di->set('pages', function() {
-				$pages = new pages('pages');
-				$pages->set_di($this->di);
-
-				return $pages;
-			});
-
 			if (is_readable(root . $this->di->asset->get_module_dir() . $module_name . '/' . $module_name . '.php')) {
 				if (!isset($this->di->$module_name)) {
 					$this->di->$module_name = new $module_name($module_name);
@@ -143,6 +136,9 @@ class core extends dependency {
 	 */
 	public function get_html_footer() {
 		$html = '';
+		if (debug && defined('show_mysql_benchmark') && show_mysql_benchmark) {
+			echo '<div id="mysql_benchmark" style="background-color:#fff;padding:20px;">' . $this->di->benchmark->get_benchmark_formatted('mysql') . '</div>';
+		}
 		if (!empty($this->footer_js_files)) {
 			$html .= '<script>';
 			$html .= 'function __ls(b,c){(function(){if(0!=b.length){var d=b.shift(),e=arguments.callee,a=document.createElement(\'script\');a.src=d;a.onload=a.onreadystatechange=function(){a.onreadystatechange=a.onload=null;e()};(document.getElementsByTagName(\'head\')[0]||document.body).appendChild(a)}else c&&c()})()};__ls([' . "\n" . '"' . implode('",'."\n".'"', $this->footer_js_files) . '"'."\n".']';
