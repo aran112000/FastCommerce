@@ -19,7 +19,7 @@ class core_module extends seo {
 	/**
 	 * @var null
 	 */
-	protected $table = NULL;
+	public $table = NULL;
 
 	/**
 	 * @var array
