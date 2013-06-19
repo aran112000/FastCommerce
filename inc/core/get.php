@@ -32,7 +32,7 @@ final class get extends dependency {
 	 */
 	public function conf($block, $key = '', $fallback_value = '') {
 		if (empty($this->conf_file)) {
-			$this->conf_file = parse_ini_file(root . '/.conf/default.ini', true, INI_SCANNER_RAW);
+			$this->conf_file = parse_ini_file(root . '/.settings/default.ini', true, INI_SCANNER_RAW);
 		}
 
 		if (!empty($key)) {
