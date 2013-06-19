@@ -27,7 +27,7 @@ final class table_cache extends dependency {
 			return $this->table_definitions[$table];
 		}
 
-		$tres = $this->di->db->query('SHOW COLUMNS FROM `' . $table . '`');
+		$tres = $this->di->db->query('DESC `' . $table . '`');
 		if ($tres && $this->di->db->num($tres) > 0) {
 			$this->table_definitions[$table] = array();
 			while ($trow = $this->di->db->fetch_array($tres)) {
