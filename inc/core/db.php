@@ -7,11 +7,13 @@ final class db extends dependency {
 	 * @var PDO null
 	 */
 	public $conn = NULL;
+	public $benchmark;
 
 	/**
 	 */
 	public function __init() {
 		$this->connect();
+		$this->benchmark = (defined('mysql_benchmark') && mysql_benchmark);
 	}
 
 	/**
@@ -43,12 +45,21 @@ final class db extends dependency {
 	 */
 	public function query($sql, array $params = array()) {
 		try {
+			if ($this->benchmark) {
+				$this->di->benchmark->start('mysql', $sql);
+			}
 			if (!empty($params)) {
 				$res = $this->conn->prepare($sql);
 				if ($res->execute($params)) {
+					if ($this->benchmark) {
+						$this->di->benchmark->stop('mysql', $sql);
+					}
 					return $res;
 				}
 			} else {
+				if ($this->benchmark) {
+					$this->di->benchmark->stop('mysql', $sql);
+				}
 				return $this->conn->query($sql);
 			}
 		} catch (Exception $e) {
