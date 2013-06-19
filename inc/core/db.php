@@ -3,10 +3,15 @@
  * Class db
  */
 final class db extends dependency {
+
 	/**
 	 * @var PDO null
 	 */
 	public $conn = NULL;
+
+	/**
+	 * @var bool
+	 */
 	public $benchmark;
 
 	/**
@@ -23,7 +28,7 @@ final class db extends dependency {
 		if ($this->conn === NULL) {
 			try {
 				$host = $this->di->get->conf('db', 'host');
-				$host = ($host == 'localhost' ? '127.0.0.1' : $host);
+				$host = ($host == 'localhost' ? '127.0.0.1' : $host); // Avoid hostname lookup where possible
 				$this->conn = new PDO('mysql:host=' . $host . ';dbname=' . $this->di->get->conf('db', 'db'), $this->di->get->conf('db', 'user'), $this->di->get->conf('db', 'pass'), array(
 					PDO::ATTR_PERSISTENT => true
 				));
@@ -41,32 +46,65 @@ final class db extends dependency {
 	/**
 	 * @param       $sql
 	 * @param array $params
-	 * @return bool
+	 * @param bool  $benchmark
+	 * @return bool|PDOStatement
 	 */
-	public function query($sql, array $params = array()) {
+	public function query($sql, array $params = array(), $benchmark = true) {
+		if (!$this->benchmark) {
+			$benchmark = false;
+		}
 		try {
-			if ($this->benchmark) {
+			if ($benchmark) {
 				$this->di->benchmark->start('mysql', $sql);
 			}
-			if (!empty($params)) {
-				$res = $this->conn->prepare($sql);
-				if ($res->execute($params)) {
-					if ($this->benchmark) {
-						$this->di->benchmark->stop('mysql', $sql);
-					}
-					return $res;
-				}
-			} else {
-				if ($this->benchmark) {
-					$this->di->benchmark->stop('mysql', $sql);
-				}
-				return $this->conn->query($sql);
+			$res = $this->conn->prepare($sql);
+			$res->execute($params);
+			if ($benchmark) {
+				$this->di->benchmark->stop('mysql', $sql);
+				$this->do_log_query_benchmark($sql, $params);
 			}
+			return $res;
 		} catch (Exception $e) {
 			trigger_error('MySQL query error: ' . $e->getMessage() . ' - Query: ' . $sql);
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * @param string $sql
+	 * @param array  $params
+	 */
+	protected function do_log_query_benchmark($sql, array $params = array()) {
+		if (strtolower(substr($sql, 0, 6)) == 'select') {
+			$res = $this->query('EXPLAIN ' . $sql, $params, $benchmark = false);
+			if ($res && $this->num($res) > 0) {
+				$i = 0;
+				$table_uses_insert_sqls = $table_uses_insert_params = array();
+				$index_recommendation_insert_sqls = $index_recommendation_insert_params = array();
+				while ($row = $this->fetch_array($res)) { $i++;
+					$table_uses_insert_params['table' . $i] = $row['table'];
+					$table_uses_insert_sqls[] = '(:table' . $i . ', 1)';
+
+					if (!empty($row['possible_keys']) && $row['possible_keys'] != $row['key']) {
+						$index_recommendation_insert_params['table' . $i] = $row['table'];
+						$index_recommendation_insert_params['recommendation' . $i] = $row['possible_keys'];
+						$index_recommendation_insert_sqls[] = '(:table' . $i . ', :recommendation' . $i . ', 1)';
+					}
+				}
+
+				if (!empty($table_uses_insert_sqls)) {
+					$sql = 'INSERT DELAYED INTO `_mysql_table_uses` VALUES' . implode(',', $table_uses_insert_sqls) . ' ON DUPLICATE KEY UPDATE `uses`=`uses`+1';
+					$this->query($sql, $table_uses_insert_params, $benchmark = false);
+				}
+
+				if (!empty($index_recommendation_insert_sqls)) {
+					$sql = 'INSERT DELAYED INTO `_mysql_table_index_recommendations` (`tbl`, `index_recommendation`, `count`) VALUES' . implode(',', $index_recommendation_insert_sqls) . ' ON DUPLICATE KEY UPDATE `count`=`count`+1';
+					$this->query($sql, $index_recommendation_insert_params, $benchmark = false);
+				}
+			}
+		}
 	}
 
 	/**
