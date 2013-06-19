@@ -16,7 +16,7 @@ class benchmark extends dependency {
 	 */
 	public function start($group, $id) {
 		if (isset($this->benchmarks[$group]) && isset($this->benchmarks[$group][$id])) {
-			trigger_error('Benchmark ' . $group . '->' . $id . ' is already in use');
+			//trigger_error('Benchmark ' . $group . '->' . $id . ' is already in use');
 			return false;
 		}
 
