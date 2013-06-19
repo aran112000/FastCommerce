@@ -5,9 +5,9 @@
 class dependency {
 
 	/**
-	 * di @var
+	 * @var di
 	 */
-	protected $di;
+	public $di;
 
 	/**
 	 * @param $di
