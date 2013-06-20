@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 20, 2013 at 03:05 AM
+-- Generation Time: Jun 21, 2013 at 03:39 AM
 -- Server version: 5.1.62-community
 -- PHP Version: 5.3.21
 
@@ -53,6 +53,64 @@ INSERT INTO `cat` (`cid`, `parent_cid`, `live`, `deleted`, `created`, `ts`, `tit
 (5, 0, 1, 0, '0000-00-00 00:00:00', '2013-06-08 23:05:00', 'Test Category 5', 'test-category-5', ''),
 (6, 0, 1, 0, '0000-00-00 00:00:00', '2013-06-08 23:05:03', 'Test Category 6', 'test-category-6', ''),
 (7, 1, 1, 0, '0000-00-00 00:00:00', '2013-06-08 23:08:27', 'Test Category 7', 'test-category-7', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cms_field_page`
+--
+
+DROP TABLE IF EXISTS `cms_field_page`;
+CREATE TABLE IF NOT EXISTS `cms_field_page` (
+  `fid` int(3) NOT NULL AUTO_INCREMENT,
+  `title` varchar(80) NOT NULL,
+  `field` varchar(60) NOT NULL,
+  `position` int(3) NOT NULL,
+  `field_type` varchar(30) NOT NULL,
+  PRIMARY KEY (`fid`),
+  KEY `field` (`field`,`position`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+
+--
+-- Dumping data for table `cms_field_page`
+--
+
+INSERT INTO `cms_field_page` (`fid`, `title`, `field`, `position`, `field_type`) VALUES
+(11, 'Navigation title', 'nav_title', 5, 'string'),
+(10, 'Show on navigation?', 'nav', 4, 'bool'),
+(9, 'Filename', 'fn', 2, 'slug'),
+(8, 'Page content', 'body', 3, 'html'),
+(7, 'Title', 'title', 1, 'string'),
+(12, 'Direct link', 'direct_link', 6, 'url');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cms_field_prod`
+--
+
+DROP TABLE IF EXISTS `cms_field_prod`;
+CREATE TABLE IF NOT EXISTS `cms_field_prod` (
+  `fid` int(3) NOT NULL AUTO_INCREMENT,
+  `title` varchar(80) NOT NULL,
+  `field` varchar(60) NOT NULL,
+  `position` int(3) NOT NULL,
+  `field_type` varchar(30) NOT NULL,
+  PRIMARY KEY (`fid`),
+  KEY `field` (`field`,`position`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+
+--
+-- Dumping data for table `cms_field_prod`
+--
+
+INSERT INTO `cms_field_prod` (`fid`, `title`, `field`, `position`, `field_type`) VALUES
+(1, 'Title', 'title', 1, 'string'),
+(2, 'Filename', 'fn', 2, 'slug'),
+(3, 'Price', 'price', 3, 'price_vat'),
+(4, 'Main Product Details', 'body', 4, 'html'),
+(5, 'Stock Level', 'stock', 5, 'integer'),
+(6, 'Vimeo Video URL', 'vimeo_url', 6, 'url');
 
 -- --------------------------------------------------------
 
@@ -239,16 +297,17 @@ CREATE TABLE IF NOT EXISTS `_mysql_table_index_recommendations` (
   UNIQUE KEY `table` (`tbl`),
   UNIQUE KEY `id` (`id`,`tbl`,`index_recommendation`),
   KEY `index_recommendation` (`index_recommendation`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Log of MySQL index recommendations designed to have the freq' AUTO_INCREMENT=60 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Log of MySQL index recommendations designed to have the freq' AUTO_INCREMENT=237 ;
 
 --
 -- Dumping data for table `_mysql_table_index_recommendations`
 --
 
 INSERT INTO `_mysql_table_index_recommendations` (`id`, `tbl`, `index_recommendation`, `count`) VALUES
-(1, 'cat', 'live,parent_cid,deleted,parent_cid_2', 41),
-(4, 'prod', 'PRIMARY,live,deleted,pid', 12),
-(5, 'prod_link_cat', 'pid,link_cid,pid_2', 6);
+(1, 'cat', 'live,parent_cid,deleted,parent_cid_2', 98),
+(4, 'prod', 'PRIMARY,live,deleted,pid', 189),
+(5, 'prod_link_cat', 'pid,link_cid,pid_2', 6),
+(205, '_mysql_table_index_recommendations', 'PRIMARY,id', 1);
 
 -- --------------------------------------------------------
 
@@ -268,11 +327,16 @@ CREATE TABLE IF NOT EXISTS `_mysql_table_uses` (
 --
 
 INSERT INTO `_mysql_table_uses` (`tbl`, `uses`) VALUES
-('cat', 45),
-('page', 50),
-('prod', 16),
-('prod_link_cat', 12),
-('setting', 33);
+('cat', 102),
+('cms_field_page', 16),
+('cms_field_prod', 56),
+('cms_module', 576),
+('cms_module_group', 124),
+('page', 237),
+('prod', 193),
+('prod_link_cat', 26),
+('setting', 252),
+('_mysql_table_index_recommendations', 4);
 
 --
 -- Constraints for dumped tables
