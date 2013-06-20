@@ -258,9 +258,22 @@ final class get extends dependency {
 	 */
 	public function attribute($attribute, $values) {
 		if (is_array($values)) {
-			return $attribute . '="' . trim(implode(' ', $values)) . '"';
+			return ' ' . $attribute . '="' . strtolower(trim(implode(' ', $values))) . '"';
 		} else {
-			return $attribute . '="' . trim($values) . '"';
+			return ' ' . $attribute . '="' . strtolower(trim($values)) . '"';
 		}
+	}
+
+	/**
+	 * @param $string
+	 * @return string
+	 */
+	public function slug($string) {
+		$string = trim(strtolower($string));
+		$string = str_replace(array(' & ', ' ', '_'), '-', $string);
+		$string = preg_replace('/[^-^a-z^0-9]+/', '', $string);
+		$string = str_replace(array('---', '--'), '-', $string);
+
+		return addslashes($string);
 	}
 }
