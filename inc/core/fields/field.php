@@ -12,7 +12,7 @@ class field extends dependency {
 	/**
 	 * @var
 	 */
-	protected $value;
+	public $value;
 
 	/**
 	 * @var bool
@@ -30,18 +30,26 @@ class field extends dependency {
 	public function __construct($id) {
 		$this->id = get_called_class() . '_' . $id;
 		$this->label = ucfirst(trim(str_replace('_', ' ', $id)));
-		$this->set_from_request();
 	}
 
+	/**
+	 * @param string $label_title
+	 * @return string
+	 */
+	public function get_label($label_title = '') {
+		$label = (!empty($label_title) ? $label_title : $this->label);
+		return '<label for="' . $this->id . '" class="control-label">' . $label . '</label>'."\n";
+	}
 
 	/**
 	 * @param string $label_title
 	 * @return string
 	 */
 	public function get_html($label_title = '') {
-		$label = (!empty($label_title) ? $label_title : $this->label);
-		$html = '<label for="' . $this->id . '" class="control-label">' . $label . '</label>'."\n";
-		$html .= '<div class="controls"><input id="' . $this->id . '" name="' . $this->id . '" type="text" /></div>';
+		$html = $this->get_label($label_title);
+		$html .= '<div class="controls">'."\n";
+			$html .= '<input id="' . $this->id . '" name="' . $this->id . '" type="text"' . (!empty($this->value) ? ' value="' . $this->value . '"' : '') . ($this->required ? ' required' : '') . ' />'."\n";
+		$html .= '</div>';
 
 		return $html;
 	}
@@ -50,6 +58,7 @@ class field extends dependency {
 	 *
 	 */
 	public function is_valid() {
+		$this->set_from_request();
 		if ($this->required && empty($this->value)) {
 			$this->errors[$this->id] = 'is a required field';
 			return false;
