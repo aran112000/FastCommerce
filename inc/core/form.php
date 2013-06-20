@@ -9,6 +9,8 @@ class form extends dependency {
 	 */
 	public $classes = array('form-horizontal', 'form-box');
 
+	public $html5_form_validation = true;
+
 	/**
 	 * @var string
 	 */
@@ -32,7 +34,7 @@ class form extends dependency {
 	public function get_html() {
 		$html = '';
 		if (!empty($this->fields)) {
-			$html .= '<form action="#" method="post"' . $this->di->get->attributes(array('id' => $this->id, 'class' => $this->classes)) . ' enctype="multipart/form-data" novalidate>'."\n";
+			$html .= '<form action="#" method="post"' . $this->di->get->attributes(array('id' => $this->id, 'class' => $this->classes)) . ' enctype="multipart/form-data"' . (!$this->html5_form_validation ? ' novalidate' : '') . '>'."\n";
 				if (!empty($this->title)) {
 					$html .= '<h4 class="form-box-header">' . $this->title . '</h4>'."\n";
 				}
