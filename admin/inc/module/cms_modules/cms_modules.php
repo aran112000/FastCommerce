@@ -108,7 +108,7 @@ class cms_modules extends core_module {
 		if (!empty($fields)) {
 			foreach ($fields as $field) {
 				$field_type = 'field_' . $field->field_type;
-				$form_fields[$field->title] = new $field_type($field->field);
+				$form_fields[$field->title] = $this->di->load_class($field_type, '', $args = array($field_type));
 			}
 		}
 

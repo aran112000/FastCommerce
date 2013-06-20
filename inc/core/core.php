@@ -22,8 +22,7 @@ class core extends dependency {
 	public function __init() {
 		if (ajax) {
 			if ($this->di->get->class_exists($_REQUEST['act'])) {
-				$this->di->{$_REQUEST['act']} = new $_REQUEST['act'];
-				$this->di->{$_REQUEST['act']}->set_di($this->di);
+				$this->di->{$_REQUEST['act']} = $this->di->load_class($_REQUEST['act']);
 				if ($this->di->get->method_exists($this->di->{$_REQUEST['act']}, $_REQUEST['handler'])) {
 					$this->di->{$_REQUEST['act']}->$_REQUEST['handler']();
 				}
@@ -62,8 +61,7 @@ class core extends dependency {
 
 			if (is_readable(root . $this->di->asset->get_module_dir() . $module_name . '/' . $module_name . '.php')) {
 				if (!isset($this->di->$module_name)) {
-					$this->di->$module_name = new $module_name($module_name);
-					$this->di->$module_name->set_di($this->di);
+					$this->di->$module_name = $this->di->load_class($module_name);
 				}
 				if ($this->di->get->method_exists($this->di->$module_name, '__controller')) {
 					$this->page['body'] = $this->di->$module_name->__controller($url_parts, count($url_parts));

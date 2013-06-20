@@ -32,13 +32,32 @@ final class di {
 			foreach ($this->always_in_di as $register_name => $class_name) {
 				$register_name = (!is_numeric($register_name) ? $register_name : $class_name);
 				if (!isset($this->$register_name)) {
-					$class = new $class_name();
-					$class->set_di($this);
-
-					$this->set($register_name, $class);
+					$this->load_class($class_name, $register_name);
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param        $class_name
+	 * @param string $register_class_name
+	 * @param array  $constructor_arguments
+	 * @return mixed
+	 */
+	public function load_class($class_name, $register_class_name = '', $constructor_arguments = array()) {
+		if (isset($this->$class_name)) {
+			return $this->$class_name;
+		}
+		if (empty($arguments)) {
+			$class = new $class_name();
+		} else {
+			$reflection_class = new ReflectionClass($class_name);
+			$class = $reflection_class->newInstanceArgs($constructor_arguments);
+		}
+		$class->set_di($this);
+		$this->set((!empty($register_class_name) ? $register_class_name : $class_name), $class);
+
+		return $class;
 	}
 
 	/**
@@ -102,16 +121,14 @@ final class di {
 
 			// If $name is a module or object then we will auto create it
 			if ((isset($this->asset) && (is_readable(root . $this->asset->get_module_dir() . $name . '/' . $name . '.php') || is_readable(root . $this->asset->get_object_dir() . $name . '.php'))) || is_readable(root . '/inc/core/' . $name . '.php')) {
-				$val = new $name();
-				$val->set_di($this);
+				$val = $this->load_class($name);
 				$this->set($name, $val);
 
 				return $val;
 			}
 
-			$val = new table();
+			$val = $this->load_class('table');
 			$val->mysql_table_name = $name;
-			$val->set_di($this);
 			$this->set($name, $val);
 
 			return $val;
