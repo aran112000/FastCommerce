@@ -140,6 +140,7 @@ class table extends dependency {
 				$result = $this->di->db->fetch_class($tres, $this->table);
 				return $result[0];
 			}
+
 			return $this->di->db->fetch_class($tres, $this->table);
 		}
 
