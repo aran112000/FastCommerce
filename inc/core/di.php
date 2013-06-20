@@ -48,7 +48,7 @@ final class di {
 		if (isset($this->$class_name)) {
 			return $this->$class_name;
 		}
-		if (empty($arguments)) {
+		if (empty($constructor_arguments)) {
 			$class = new $class_name();
 		} else {
 			$reflection_class = new ReflectionClass($class_name);
@@ -127,8 +127,9 @@ final class di {
 				return $val;
 			}
 
-			$val = $this->load_class('table');
+			$val = new table();
 			$val->mysql_table_name = $name;
+			$val->set_di($this);
 			$this->set($name, $val);
 
 			return $val;
