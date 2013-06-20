@@ -68,7 +68,7 @@ class core_module extends seo {
 	 * @return bool
 	 */
 	public function set_current($fn, array $fields = array(), array $opts = array('where' => 'fn=:fn', 'limit' => 1)) {
-		$opts['where'] = str_replace($opts['where'], 'fn=:fn', $this->fn_column . '=:fn');
+		$opts['where'] = str_replace('fn=:fn', $this->fn_column . '=:fn', $opts['where']);
 		$opts['params']['fn'] = $fn;
 		if (!$this->current = $this->di->{$this->table}->do_retrieve($fields, $opts)) {
 			$this->di->run->header_redir('/404', 404);
