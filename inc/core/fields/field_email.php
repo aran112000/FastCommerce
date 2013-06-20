@@ -1,6 +1,6 @@
 <?
 /**
- * Class field_string
+ * Class field_email
  */
 class field_email extends field_string {
 
