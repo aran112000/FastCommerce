@@ -29,8 +29,8 @@ spl_autoload_register(function($class) {
 		require(root . '/inc/core/' . $class . '.php');
 	} else if (file_exists(root . '/admin/inc/' . $class . '.php')) {
 		require(root . '/admin/inc/' . $class . '.php');
-	} else if (file_exists(root . '/inc/static/' . $class . '.php')) {
-		require(root . '/inc/static/' . $class . '.php');
+	} else if (file_exists(root . '/inc/core/fields/' . $class . '.php')) {
+		require(root . '/inc/core/fields/' . $class . '.php');
 	}
 });
 
