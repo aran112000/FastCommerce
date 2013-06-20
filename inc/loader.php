@@ -27,8 +27,8 @@ error_reporting(E_ALL);
 spl_autoload_register(function($class) {
 	if (file_exists(root . '/inc/core/' . $class . '.php')) {
 		require(root . '/inc/core/' . $class . '.php');
-	} else if (file_exists(root . '/inc/static/' . $class . '.php')) {
-		require(root . '/inc/static/' . $class . '.php');
+	} else if (file_exists(root . '/inc/core/fields/' . $class . '.php')) {
+		require(root . '/inc/core/fields/' . $class . '.php');
 	}
 });
 
@@ -52,11 +52,7 @@ if (!defined('load_core') || load_core) {
 		return false;
 	});
 
-	if (isset($cms) && $cms) {
-		$di->core = new cms();
-	} else {
-		$di->core = new core();
-	}
+	$di->core = new core();
 	$di->core->set_di($di);
 
 	if (!ajax) {
