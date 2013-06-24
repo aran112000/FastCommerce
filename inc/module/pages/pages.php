@@ -48,7 +48,7 @@ final class pages extends core_module {
 	 */
 	public function get_nav($id, array $options = array()) {
 		$html = '';
-		$pages = $this->di->page->do_retrieve(array(), array($options));
+		$pages = $this->di->page->do_retrieve(array(), $options);
 		$pnum = count($pages);
 		if ($pnum > 0) {
 			$i = 0;
