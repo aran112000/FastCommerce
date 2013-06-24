@@ -15,6 +15,6 @@ final class page extends table {
 		if (!empty($this->direct_link)) {
 			return $page_path_prefix . ltrim($this->direct_link, '/');
 		}
-		return $page_path_prefix . ($this->pid == 1 ? '' : $this->pid . '/' . $this->fn);
+		return $page_path_prefix . (isset($this->pid) && $this->pid == 1 ? '' : $this->pid . '/' . $this->fn);
 	}
 }
