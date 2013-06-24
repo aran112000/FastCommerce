@@ -39,7 +39,7 @@ class table extends dependency {
 	 */
 	public function __init() {
 		$this->table = ($this->mysql_table_name !== NULL ? $this->mysql_table_name : get_called_class());
-		if (!empty($this->table)) {
+		if (empty($this->fields) && !empty($this->table)) {
 			$this->fields = $this->di->table_cache->get_table_definition($this->table);
 		}
 	}
@@ -121,7 +121,7 @@ class table extends dependency {
 		}
 		if (isset($options['group_by']) && !empty($options['group_by'])) {
 			$sql .= ' GROUP BY `' . (string) $options['group_by'] . '`';
-		} else {
+		} else if (!empty($options['join'])) {
 			$key = key($this->fields);
 			if (!empty($key)) {
 				$sql .= ' GROUP BY `' . (string) $key . '`';
@@ -134,14 +134,12 @@ class table extends dependency {
 			$sql .= ' LIMIT ' . (int) $options['limit'];
 		}
 
-		$tres = $this->di->db->query($sql, $params);
-		if ($tres && $this->di->db->num($tres) > 0) {
+		if ($result = $this->di->db->query($sql, $params, array('fetch' => 'class', 'class' => $this->table))) {
 			if (isset($options['limit']) && $options['limit'] == 1) {
-				$result = $this->di->db->fetch_class($tres, $this->table);
-				return $result[0];
+				return (isset($result[0]) ? $result[0] : false);
 			}
 
-			return $this->di->db->fetch_class($tres, $this->table);
+			return $result;
 		}
 
 		return false;

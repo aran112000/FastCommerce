@@ -55,11 +55,8 @@ final class get extends dependency {
 	 */
 	public function setting($key, $fallback_value = '') {
 		if (empty($this->fetched_settings)) {
-			$sres = $this->di->db->query('SELECT `key`, `value` FROM setting');
-			if ($this->di->db->num($sres) > 0) {
-				while ($srow = $this->di->db->fetch_object($sres)) {
-					$this->fetched_settings[$srow->key] = $srow->value;
-				}
+			foreach ($this->di->db->query('SELECT `key`, `value` FROM setting', array(), array('fetch' => 'array')) as $srow) {
+				$this->fetched_settings[$srow['key']] = $srow['value'];
 			}
 		}
 

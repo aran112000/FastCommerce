@@ -27,10 +27,9 @@ final class table_cache extends dependency {
 			return $this->table_definitions[$table];
 		}
 
-		$tres = $this->di->db->query('DESC `' . $table . '`');
-		if ($tres && $this->di->db->num($tres) > 0) {
+		if ($tres = $this->di->db->query('DESC `' . $table . '`', array(), array('fetch' => 'array'))) {
 			$this->table_definitions[$table] = array();
-			while ($trow = $this->di->db->fetch_array($tres)) {
+			foreach ($tres as $trow) {
 				$mysql_field_details = $this->do_split_mysql_field($trow['Type']);
 				if (!empty($mysql_field_details)) {
 					$this->table_definitions[$table][$trow['Field']] = array(
