@@ -46,19 +46,23 @@ class benchmark extends dependency {
 	 * @return mixed
 	 */
 	public function get_benchmark_formatted($group) {
-		$data = $this->benchmarks[$group];
+		$data = (isset($this->benchmarks[$group]) ? $this->benchmarks[$group] : array());
 
-		return $this->di->html->get_table(
-			array(
-				'columns' => array(
-					'key' => ucwords($group) . ' Key',
-					'start' => 'Start Time',
-					'stop' => 'Completion Time',
-					'time' => 'Execution Time'
-				),
-				'data' => $data
-			)
-		);
+		if (!empty($data)) {
+			return $this->di->html->get_table(
+				array(
+					'columns' => array(
+						'key' => ucwords($group) . ' Key',
+						'start' => 'Start Time',
+						'stop' => 'Completion Time',
+						'time' => 'Execution Time'
+					),
+					'data' => $data
+				)
+			);
+		}
+
+		return '';
 	}
 
 	/**
