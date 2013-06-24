@@ -31,6 +31,11 @@ if (!defined('load_core') || load_core) {
 		return false;
 	});
 
+	$memcached_servers = array(
+		'server1' => array($host = '127.0.0.1', $port = 11211, $weight = 100),
+	);
+	$di->cache->connect($memcached_servers);
+
 	$di->core = $di->load_class('core');
 	$di->core->set_di($di);
 
