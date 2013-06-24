@@ -24,8 +24,8 @@ class form extends dependency {
 	/**
 	 *
 	 */
-	public function __construct() {
-		$this->id = 'form_' . get_called_class();
+	public function __init() {
+		$this->id = 'form_' . get_class();
 	}
 
 	/**
