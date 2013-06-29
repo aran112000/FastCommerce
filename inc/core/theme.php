@@ -45,13 +45,14 @@ final class theme extends dependency {
 
 		// TODO - Write to error tbl, no visible error should be thrown for this
 		$this->get_fallback_theme();
+
 		return $this->theme;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function get_fallback_theme() {
+	protected function get_fallback_theme() {
 		foreach (glob(root . $this->base_theme_path . '*', GLOB_ONLYDIR) as $dir) {
 			if (!strstr($dir, '/_global')) {
 				$theme_path_parts = explode('/', str_replace(root, '', $dir));
