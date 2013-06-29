@@ -31,7 +31,7 @@ class cache extends dependency {
 			$this->cache->setOption(Memcached::OPT_PREFIX_KEY, str_replace('http' . (ssl ? 's' : '') . '://', '', host));
 			$this->cache->setOption(Memcached::OPT_BUFFER_WRITES, false);
 			$this->cache->setOption(Memcached::OPT_TCP_NODELAY, true);
-			$this->cache->setOption(Memcached::OPT_CACHE_LOOKUPS, true);
+			//$this->cache->setOption(Memcached::OPT_CACHE_LOOKUPS, true);
 			$this->use_memcached = true;
 		} else if ($this->di->get->class_exists('memcache') && !$this->use_memcached) {
 			// When in a Windows environment Memcache is the simpler option as no up-to-date Memcached DLLs are available for PHP unless you wish to compile your own
