@@ -1,6 +1,6 @@
 a { text-decoration: none; }
-a, p, em, div, header, section, b, strong { font-size: @default-font-size; line-height: @default-line-height; }
-a, p, em, div, header, section, b, strong, small, h1, h2, h3, h3, h5, h6 { color: @default-color; font-family: @default-font; }
+a, p, em, b, strong { font-size: @default-font-size; line-height: @default-line-height; }
+a, p, em, b, strong, small, h1, h2, h3, h3, h5, h6 { color: @default-color; font-family: @default-font; }
 h1, h2, h3, h4, h5, h6, strong, em { color: @primary }
 h1 { font-size: 30px; margin: 0 0 15px 0; line-height: 32px; }
 
@@ -58,4 +58,31 @@ body {
       padding: 20px 0;
     }
   }
+}
+
+::-webkit-scrollbar {
+  height: 16px;
+  overflow: visible;
+  width: 16px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,.2);
+  background-clip: padding-box;
+  border: solid transparent;
+  border-width: 1px 1px 1px 6px;
+  min-height: 28px;
+  padding: 100px 0 0;
+  box-shadow: inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);
+}
+::-webkit-scrollbar-button {
+  height: 0;
+  width: 0;
+}
+::-webkit-scrollbar-track {
+  background-clip: padding-box;
+  border: solid transparent;
+  border-width: 0 0 0 4px;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
