@@ -108,7 +108,9 @@ class core extends dependency {
 	 * @return array
 	 */
 	public function get_url_parts() {
-		return explode('/', substr(uri, 1, strlen(uri)));
+		$uri = uri;
+		$uri_fragments = explode('?', $uri, 2);
+		return explode('/', substr($uri_fragments[0], 1, strlen($uri_fragments[0])));
 	}
 
 	/**
@@ -134,13 +136,48 @@ class core extends dependency {
 		$html .= '</head>'."\n";
 		$html .= '<body>'."\n";
 
-		if (debug) {
+		if (debug && isset($_REQUEST['live_edit'])) {
+			$uri = uri;
+			$uri_fragments = explode('?', $uri, 2);
+
 			$html .= '<div id="live_edit_splitter">'."\n";
-				$html .= '<div id="editor_pane">'."\n";
-					$html .= $this->di->code_editor->get_editor_pane('less', '/inc/theme/buyshop/css/main.less');
+
+				$html .= '<div id="admin_file_browser">'."\n";
+					$html .= $this->di->code_editor->get_file_browser();
 				$html .= '</div>'."\n";
 
-				$html .= '<div id="website_pane">'."\n";
+				$html .= '<div id="live_edit_splitter_horz">'."\n";
+					$html .= '<div id="editor_pane">'."\n";
+						$html .= $this->di->code_editor->get_editor_pane('less', '/inc/theme/buyshop/css/main.less');
+					$html .= '</div>'."\n";
+
+					$html .= '<div id="website_pane">'."\n";
+						$html .= '<iframe src="' . $uri_fragments[0] . '" id="live_edit_preview_iframe" style="border:none;width:100%;height:750px;"></iframe>'."\n";
+
+			$this->inline_js['live_edit'] = '$(\'#live_edit_splitter\')
+	.splitter({
+		splitVertical: true,
+		outline: true,
+		sizeLeft: true,
+		resizeTo: window
+	})
+	.css(\'width\', $(window).width + \'px\').trigger("resize");
+
+$(\'#live_edit_splitter_horz\')
+	.splitter({
+		splitHorizontal: true,
+		sizeTop: true
+	})
+	.css(\'width\', $(window).width + \'px\').trigger("resize");
+
+$(\'#live_edit_splitter, .vsplitbar\').css({
+	height: $(window).height() + 15 + \'px\',
+	\'overflow-y\': \'auto\',
+	\'overflow-x\': \'hidden\',
+}).trigger("resize");';
+
+			$html .= $this->get_html_footer();
+			exit($html);
 		}
 
 		return $html;
@@ -299,7 +336,7 @@ class core extends dependency {
 	public function get_html_footer() {
 		$html = '';
 		if (debug) {
-			$html .= '</div></div>'."\n"; // End of live edit frame wrapper
+			$html .= '</div></div></div>'."\n"; // End of live edit frame wrapper
 
 			if (defined('show_mysql_benchmark') && show_mysql_benchmark) {
 				echo '<div id="mysql_benchmark" style="background-color:#fff;padding:20px;">' . $this->di->benchmark->get_benchmark_formatted('mysql') . '</div>';
@@ -333,9 +370,6 @@ class core extends dependency {
 	 * Destructor
 	 */
 	public function __destruct() {
-		if (ajax) {
-			$this->di->ajaxify->do_serve();
-		}
 		$this->di->db->close();
 		if (gc_support) {
 			gc_collect_cycles();
