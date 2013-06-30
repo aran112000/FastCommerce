@@ -164,7 +164,7 @@
                 this._min = opts["min" + this._pane] || dimSum(this, "min-" + opts.split);
                 this._max = opts["max" + this._pane] || dimSum(this, "max-" + opts.split) || 9999;
                 this._init = opts["size" + this._pane] === true ?
-                    parseInt($.curCSS(this[0], opts.split)) : opts["size" + this._pane];
+                    parseInt($.css(this[0], opts.split)) : opts["size" + this._pane];
             });
 
             // Determine initial position, get from cookie if specified
