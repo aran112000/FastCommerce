@@ -10,47 +10,58 @@ class ajaxify extends dependency {
 	private $payload = array();
 
 	/**
+	 * @param $selector
 	 * @param $html
-	 * @return bool
 	 */
-	public function add_update_html($html) {
-		$this->payload['add_html'][$html] = $html;
-
-		return true;
+	public function do_update($selector, $html) {
+		$this->payload['update'][$selector] = $html;
 	}
 
 	/**
+	 * @param $selector
 	 * @param $html
-	 * @return bool
 	 */
-	public function add_inject_html($html) {
-		$this->payload['inject_html'][$html] = $html;
+	public function do_append($selector, $html) {
+		$this->payload['append'][$selector] = $html;
+	}
 
-		return true;
+	/**
+	 * @param $selector
+	 * @param $html
+	 */
+	public function do_prepend($selector, $html) {
+		$this->payload['prepend'][$selector] = $html;
+	}
+
+	/**
+	 * @param $markup
+	 */
+	public function do_inject($markup) {
+		$this->payload['inject'][] = $markup;
 	}
 
 	/**
 	 * @param $dom_selector
 	 */
-	public function delete_html($dom_selector) {
-		$this->payload['delete_node'][$dom_selector] = $dom_selector;
+	public function do_delete($dom_selector) {
+		$this->payload['delete'][] = $dom_selector;
 	}
 
 	/**
 	 * @param $javascript
-	 * @return bool
 	 */
-	public function add_script($javascript) {
-		$this->payload['script'][$javascript] = $javascript;
-
-		return true;
+	public function do_inject_script($javascript) {
+		$this->payload['script'][] = $javascript;
 	}
 
 	/**
 	 *
 	 */
-	public function do_serve() {
-		if (!empty($this->payload)) {
+	public function __destruct() {
+		if (ajax && !empty($this->payload)) {
+			if (!empty($this->di->core->inline_js)) {
+				$this->payload['script'] = array_merge((isset($this->payload['script']) ? $this->payload['script'] : array()), $this->di->core->inline_js);
+			}
 			die(json_encode($this->payload));
 		}
 	}
