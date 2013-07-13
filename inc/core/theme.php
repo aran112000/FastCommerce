@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Class theme
  */
@@ -91,10 +91,7 @@ final class theme extends dependency {
 	 *
 	 */
 	private function set_resources() {
-		foreach(glob(root . '/inc/theme/_global/js/*.js') as $js) {
-			$this->di->core->footer_js_files[$js] = str_replace(root, '', $js);
-		}
-		foreach(glob(root . $this->base_theme_path . '_global/*.js') as $js) {
+		foreach(glob(root . $this->base_theme_path . '_global/js/*.js') as $js) {
 			$this->di->core->footer_js_files[$js] = str_replace(root, '', $js);
 		}
 

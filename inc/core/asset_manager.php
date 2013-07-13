@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Class asset_manager
  *

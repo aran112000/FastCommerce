@@ -1,4 +1,4 @@
-<?
+<?php
 // Set PHP error reporting - TODO - Add error handler override so that only `debug` users see errors, others need to be logged
 ini_set('display_errors', E_ALL);
 error_reporting(E_ALL);
@@ -10,7 +10,7 @@ define('host', (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'unknown'
 define('uri', (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/'));
 define('ssl', (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on'));
 define('user_agent', (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'Unknown User Agent'));
-define('debug', (strstr(ip, '127.0.0.1')));
+define('debug', (ip == '127.0.0.1'));
 define('ajax', (isset($_REQUEST['act']) && !empty($_REQUEST['act'])));
 define('gc_support', function_exists('gc_enable'));
 if (debug) {

@@ -7,7 +7,7 @@
     overflow: hidden;
     margin-right: 20px;
     img {
-      border: 1px solid @light-border;
+      border: 1px solid $light-border;
       background-color: #fff;
       padding: 5px;
     }
@@ -16,15 +16,15 @@
     float: right;
     display: block;
     overflow: hidden;
-    width: @max-site-width - 412 - 20;
+    width: $max-site-width - 412 - 20;
     #video {
-      border: 2px solid @light-border;
+      border: 2px solid $light-border;
       padding: 5px;
       background-color: #fff;
       .rounded(3px);
       iframe {
         margin: 0;
-        border: 1px solid @light-border;
+        border: 1px solid $light-border;
       }
     }
   }

@@ -1,25 +1,25 @@
 a { text-decoration: none; }
-a, p, em, b, strong { font-size: @default-font-size; line-height: @default-line-height; }
-a, p, em, b, strong, small, h1, h2, h3, h3, h5, h6 { color: @default-color; font-family: @default-font; }
-h1, h2, h3, h4, h5, h6, strong, em { color: @primary }
+a, p, em, b, strong { font-size: $default-font-size; line-height: $default-line-height; }
+a, p, em, b, strong, small, h1, h2, h3, h3, h5, h6 { color: $default-color; font-family: $default-font; }
+h1, h2, h3, h4, h5, h6, strong, em { color: $primary }
 h1 { font-size: 30px; margin: 0 0 15px 0; line-height: 32px; }
 
 body {
   margin: 0;
-  background: #fff url("@{theme-path}/images/body.jpg") center 70px no-repeat fixed;
+  background: #fff url("#{$theme-path}/images/body.jpg") center 70px no-repeat fixed;
   header {
     display: block;
     overflow: hidden;
     clear: both;
     margin-bottom: 25px;
     height: 175px;
-    border-bottom: 2px solid @light-border;
+    border-bottom: 2px solid $light-border;
     img {
       display: block;
       margin: 20px auto 0 auto;
     }
     nav#main {
-      width: @max-site-width;
+      width: $max-site-width;
       display: block;
       margin: 30px auto 0 auto;
       ul, li {
@@ -38,19 +38,19 @@ body {
           display: block;
           padding: 0 20px;
           margin: 0 1px;
-          border-right: 1px solid @primary;
+          border-right: 1px solid $primary;
           font-weight: bold;
         }
         a.sel, a:hover {
-          color: @primary;
-          border-bottom: 2px solid @primary;
+          color: $primary;
+          border-bottom: 2px solid $primary;
         }
       }
       li.last { border: none; }
     }
   }
   section#main {
-    width: @max-site-width;
+    width: $max-site-width;
     display: block;
     overflow: hidden;
     margin: 0 auto;
@@ -86,3 +86,4 @@ body {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+

@@ -1,4 +1,4 @@
-<?
+<?php
 require(root . '/inc/config.php');
 define('cms', false);
 

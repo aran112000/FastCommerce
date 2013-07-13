@@ -1,6 +1,7 @@
-var __af = __ajaxify();
+var $body = $('body'),
+    __af = __ajaxify();
 
-$('body').on('click', '[data-ajaxify-handler]', function() {
+$body.on('click, submit', '[data-ajaxify-handler]', function() {
     var data={};
 
     var allow_multiple = (typeof $(this).attr('allow-multiple') != 'undefined');
@@ -43,7 +44,6 @@ function __ajaxify() {
         send: function (data, callback)  {
             if (typeof data.payload == 'object') {
                 $.ajax({
-                    url: '/',
                     global: false,
                     type: 'GET',
                     dataType: 'JSON',

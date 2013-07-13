@@ -10,10 +10,10 @@ ul#prod.list {
     padding: 0;
     margin: 0 10px 20px 10px;
     float: left;
-    width: (@max-site-width / 4) - 20px;
+    width: ($max-site-width / 4) - 20px;
     a {
       display: block;
-      border: 2px solid @light-border;
+      border: 2px solid $light-border;
       height: 375px;
       .rounded;
       span.padded_img {
@@ -26,7 +26,7 @@ ul#prod.list {
         display: block;
         text-align: center;
         font-weight: bold;
-        color: @primary;
+        color: $primary;
         font-size: 13px;
         line-height: 18px;
         margin-bottom: 5px;
@@ -35,13 +35,13 @@ ul#prod.list {
         display: block;
         text-align: center;
         font-weight: bold;
-        color: @default-color;
+        color: $default-color;
         font-size: 15px;
         line-height: 20px;
       }
     }
     a:hover {
-      border-color: @light-border*0.8;
+      border-color: $light-border*0.8;
       .opacity(0.9);
     }
   }

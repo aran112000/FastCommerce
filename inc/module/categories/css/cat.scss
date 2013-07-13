@@ -10,10 +10,10 @@ ul#cat.list {
     padding: 0;
     margin: 0 10px 20px 10px;
     float: left;
-    width: (@max-site-width / 4) - 20px;
+    width: ($max-site-width / 4) - 20px;
     a {
       display: block;
-      border: 2px solid @light-border;
+      border: 2px solid $light-border;
       height: 350px;
       .rounded;
       span.padded_img {
@@ -26,12 +26,12 @@ ul#cat.list {
         display: block;
         text-align: center;
         font-weight: bold;
-        color: @primary;
+        color: $primary;
         font-size: 13px;
       }
     }
     a:hover {
-      border-color: @light-border*0.8;
+      border-color: $light-border*0.8;
       .opacity(0.9);
     }
   }

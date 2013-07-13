@@ -1,7 +1,7 @@
 <h1><?= $this->current->title ?></h1>
 <?= $this->current->body ?>
 <?= $this->get_list($this->current->cid) ?>
-<?
+<?php
 $prods = $this->di->prod_list->get_list_from_cat($this->di->categories->current->cid);
 if ($prods && !empty($prods)) {
 	?>

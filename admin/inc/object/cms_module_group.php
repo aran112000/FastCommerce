@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Class cms_module_group
  */

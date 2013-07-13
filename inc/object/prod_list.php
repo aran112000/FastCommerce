@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Class prod_list
  */

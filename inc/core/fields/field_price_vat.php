@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Class field_price_vat
  * TODO

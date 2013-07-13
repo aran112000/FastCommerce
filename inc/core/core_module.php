@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Class core_module
  */
@@ -32,6 +32,14 @@ class core_module extends seo {
 	public $current = NULL;
 
 	/**
+	 * @var array
+	 *
+	 * Set by magic method __set and used for update/insert queries called from do_save()
+	 * We only store changed values where the variable is one that exists in the MySQL table
+	 */
+	protected $db_changed_fields = array();
+
+	/**
 	 * @param null $table
 	 */
 	public function __init($table = NULL) {
@@ -44,6 +52,19 @@ class core_module extends seo {
 			$this->di->run->http_status(404);
 			$this->get_view('404');
 		}
+	}
+
+	/**
+	 * @param $var
+	 * @param $value
+	 *
+	 * Used to track MySQL values changing for calls to $this->do_save()
+	 */
+	public function __set($var, $value) {
+		if (isset($this->fields) && isset($this->fields[$var])) {
+			$this->db_changed_fields[$var] = $value;
+		}
+		$this->{$var} = $value;
 	}
 
 	/**
@@ -79,7 +100,6 @@ class core_module extends seo {
 
 	/**
 	 * @param string $view
-	 *
 	 * @return bool|string
 	 */
 	public function get_view($view = 'default') {
@@ -91,8 +111,27 @@ class core_module extends seo {
 			ob_end_clean();
 
 			return $html;
-		} else {
-			return false;
+		}
+
+		return false;
+	}
+
+	/**
+	 *
+	 */
+	public function set_from_request() {
+		foreach ($this->fields as $field => $opts) {
+			$this->{$field} = $field->set_from_request();
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function do_save() {
+		$this->set_from_request();
+		if (!empty($this->db_changed_fields)) {
+			echo '<p><strong>MySQL Fields/Values to be updated:</strong><br /><pre>' . print_r($this->db_changed_fields, true) . '</pre></p>'."\n";
 		}
 	}
 }

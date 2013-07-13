@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Class code_editor
  */

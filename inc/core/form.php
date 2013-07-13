@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Class form
  */
@@ -9,6 +9,9 @@ class form extends dependency {
 	 */
 	public $classes = array('form-horizontal', 'form-box');
 
+	/**
+	 * @var bool
+	 */
 	public $html5_form_validation = true;
 
 	/**

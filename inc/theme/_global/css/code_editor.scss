@@ -1,0 +1,66 @@
+.ace_editor {
+  top: 0;
+  left: 0;
+  border: 1px solid lightgray;
+  margin: auto;
+  overflow: auto;
+  height: 700px;
+  width: inherit;
+  overflow: hidden;
+}
+.ace_layer div {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace !important;
+  color: #E6E1DC !important;
+  overflow: hidden !important;
+}
+
+#live_edit_splitter {
+  height: 1150px;
+  width: 100%;
+  background-color: #fff;
+  #admin_file_browser {
+    width: 200px;
+  }
+  #website_pane {
+  }
+  #editor_pane {
+    height: 300px;
+  }
+}
+#live_edit_splitter div:first-child {
+  overflow: auto;
+}
+.vsplitbar {
+  width: 5px;
+  background: #aaa;
+}
+.hsplitbar {
+  height: 5px;
+  background: #aaa;
+}
+
+#admin_file_browser {
+  ul.file_browser {
+    margin-bottom: 20px;
+    display: block;
+    overflow: hidden;
+    &, li {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    li {
+      margin: 3px 0 3px 15px;
+      text-indent: 30px;
+      background-repeat: no-repeat;
+      background-position: left top;
+      line-height: 25px;
+      font-size: 11px;
+      font-family: arial;
+
+    }
+  }
+}
+#live_edit_splitter_horz {
+  overflow: hidden;
+}
