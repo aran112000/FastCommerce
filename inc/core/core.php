@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Class core
  */
@@ -37,9 +37,19 @@ class core extends dependency {
 	public $less_files = array();
 
 	/**
+	 * @var array
+	 */
+	public $scss_files = array();
+
+	/**
+	 * @var array
+	 */
+	public $sass_files = array();
+
+	/**
 	 * @var
 	 */
-	public $css_last_mod_time;
+	public $css_last_mod_time = 0;
 
 	/**
 	 * Constructor
@@ -216,29 +226,44 @@ $(\'#live_edit_splitter, .vsplitbar\').css({
 	public function get_css_contents() {
 		$this->get_css_files();
 		$this->get_less_files();
+		$this->get_sass_files();
 
-		$css = $less_css = '';
+		$css = $less_css = $sass_css = $scss_css = '';
 		foreach ($this->css_files as $file_root_path => $file) {
 			$css .= file_get_contents($file_root_path);
 		}
 
 		foreach ($this->less_files as $file_root_path => $file) {
-			$less_css .= file_get_contents($file_root_path);
+			$less_css .= file_get_contents($file_root_path)."\n";
+		}
+
+		require_once(root . '/inc/lib/sass/SassParser.php');
+		$sass_parser_opts = array(
+			'style' => 'nested',
+			'cache' => false,
+			'syntax' => 'scss',
+			'debug' => false,
+		);
+		if (!empty($this->scss_files)) {
+			$parser = new SassParser($sass_parser_opts);
+			$css .= $parser->toCss($this->scss_files);
+		}
+
+		if (!empty($this->sass_files)) {
+			$sass_parser_opts['syntax'] = 'sass';
+			$parser = new SassParser($sass_parser_opts);
+			$css .= $parser->toCss($this->sass_files);
 		}
 
 		if (!empty($less_css)) {
-			if (is_readable(root . '/inc/lib/less/lessc.php')) {
-				require_once(root . '/inc/lib/less/lessc.php');
+			require_once(root . '/inc/lib/less/lessc.php');
 
-				$less = new lessc;
-				$less->setFormatter('compressed');
-				try {
-					$css .= $less->compile($less_css);
-				} catch (exception $e) {
-					trigger_error('Fatal error compiling LESS css: ' . $e->getMessage());
-				}
-			} else {
-				trigger_error('Error loading lessc lib');
+			$less = new lessc;
+			$less->setFormatter('compressed');
+			try {
+				$css .= $less->compile($less_css);
+			} catch (exception $e) {
+				trigger_error('Fatal error compiling LESS css: ' . $e->getMessage());
 			}
 		}
 
@@ -255,6 +280,7 @@ $(\'#live_edit_splitter, .vsplitbar\').css({
 	public function get_css_last_mod_time() {
 		$this->get_css_files();
 		$this->get_less_files();
+		$this->get_sass_files();
 
 		if ($this->css_last_mod_time > 0) {
 			return $this->css_last_mod_time;
@@ -268,6 +294,20 @@ $(\'#live_edit_splitter, .vsplitbar\').css({
 		}
 
 		foreach ($this->less_files as $file_root_path => $file) {
+			$time = filemtime($file_root_path);
+			if ($time > $this->css_last_mod_time) {
+				$this->css_last_mod_time = $time;
+			}
+		}
+
+		foreach ($this->scss_files as $file_root_path => $file) {
+			$time = filemtime($file_root_path);
+			if ($time > $this->css_last_mod_time) {
+				$this->css_last_mod_time = $time;
+			}
+		}
+
+		foreach ($this->sass_files as $file_root_path => $file) {
 			$time = filemtime($file_root_path);
 			if ($time > $this->css_last_mod_time) {
 				$this->css_last_mod_time = $time;
@@ -321,6 +361,13 @@ $(\'#live_edit_splitter, .vsplitbar\').css({
 	 */
 	public function get_less_files() {
 		return $this->get_css_files('less');
+	}
+
+	/**
+	 * @return array
+	 */
+	public function get_sass_files() {
+		return array_merge($this->get_css_files('scss'), $this->get_css_files('sass'));
 	}
 
 	/**
