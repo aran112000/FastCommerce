@@ -15,10 +15,12 @@ We are using YouTrack for monitoring development progress so to see exactly what
 http://fastcommerce.myjetbrains.com/youtrack/rest/agile/FC/sprint/Unscheduled
 
 What platforms have been tested?
-===============================
+================================
+After starting out with no unit testing in place (and now regretting this), we are currently working on implementing PHPUnit with a view of eventual 100% code coverage. We will shortly be starting CI using Travis (travis-ci.org).
+
 We are currently developing and testing as we go in both Linux & Windows environments, below is the key versions we're using:
  - OS          : CentOS 6.3 (Final) & Window 7 (using Winginx)
- - Web Server  : Nginx (Apache should work but is currently untested)
- - PHP         : PHP 5.4.11 & PHP-FPM 5.4.15
+ - Web Server  : Nginx, Apache (reports from other users within Apache environments confirm it works correctly although not officially tested yet)
+ - PHP         : 5.4.11, 5.4.16 & PHP-FPM 5.4.15
  - DB          : MySQL 5.5.31 & 5.1.62
- - Caching     : Memcached 1.4.15
+ - Caching     : Memcached Version(s) 1.4.4 & 1.4.15 & Memcache
