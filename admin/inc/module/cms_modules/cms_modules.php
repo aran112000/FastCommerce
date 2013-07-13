@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Class cms_modules
  */
@@ -8,6 +8,11 @@ class cms_modules extends core_module {
 	 * @var string
 	 */
 	public $fn_column = 'table_name';
+
+	/**
+	 * @var
+	 */
+	public $cms_module_fields;
 
 	/**
 	 * @param array $path_parts
@@ -47,6 +52,17 @@ class cms_modules extends core_module {
 	}
 
 	/**
+	 *
+	 */
+	protected function get_cms_fields() {
+		if (!isset($this->cms_module_fields) || empty($this->cms_module_fields)) {
+			$this->cms_module_fields = $this->di->{'cms_field_' . $this->module->table_name}->do_retrieve();
+		}
+
+		return $this->cms_module_fields;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function get_module_list() {
@@ -58,9 +74,9 @@ class cms_modules extends core_module {
 					$html .= '<tr>'."\n";
 						$html .= '<th class="span1"></th>'."\n";
 						$i = 0;
-						foreach ($this->di->{$this->module->table_name}->fields as $field => $opt) { $i++;
-							if ($field != 'live' && $field != 'deleted') {
-								$html .= '<th>' . ($i == 1 ? '#' : $field) . '</th>'."\n";
+						foreach ($this->get_cms_fields() as $field) { $i++;
+							if ($field->list && $field->edit) {
+								$html .= '<th>' . $field->title . '</th>'."\n";
 							}
 						}
 					$html .= '</tr>'."\n";
@@ -74,9 +90,9 @@ class cms_modules extends core_module {
 									$html .= '<a href="#" data-toggle="tooltip" title="Delete" class="btn btn-mini btn-danger"><i class="icon-remove"></i></a>'."\n";
 								$html .= '</div>'."\n";
 							$html .= '</td>'."\n";
-							foreach ($this->di->{$this->module->table_name}->fields as $field => $opt) { $i++;
-								if (isset($item->{$field})) {
-									$html .= '<td><span>' . $item->{$field} . '</span></td>'."\n";
+							foreach ($this->get_cms_fields() as $field) { $i++;
+								if ($field->list && $field->edit && isset($item->{$field->field})) {
+									$html .= '<td><span>' . $item->{$field->field} . '</span></td>'."\n";
 								}
 							}
 						$html .= '</tr>'."\n";
