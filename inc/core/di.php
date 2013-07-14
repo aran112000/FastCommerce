@@ -8,10 +8,10 @@ final class di {
 	 * @var array
 	 */
 	public $always_in_di = array(
-		'db',
+		/*'db',
 		'get',
 		'run',
-		'ajaxify',
+		'ajaxify',*/
 		'asset' => 'asset_manager',
 	);
 
