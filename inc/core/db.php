@@ -2,7 +2,7 @@
 /**
  * Class db
  */
-final class db extends dependency {
+class db extends dependency {
 
 	/**
 	 * @var PDO null
@@ -24,7 +24,7 @@ final class db extends dependency {
 	/**
 	 * @return bool
 	 */
-	private function connect() {
+	protected function connect() {
 		if ($this->conn === NULL) {
 			$host = $this->di->get->conf('db', 'host');
 			$host = ($host == 'localhost' ? '127.0.0.1' : $host); // Avoid hostname lookup where possible
