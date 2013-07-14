@@ -16,6 +16,52 @@ final class run extends dependency {
 	}
 
 	/**
+	 * @param string $start_dir
+	 * @param string $match_file_pattern
+	 * @param bool   $recursive
+	 * @return array
+	 */
+	public static function glob_pattern($start_dir, $match_file_pattern, $recursive = true) {
+		$matches = array();
+		$start_dir = rtrim(root . str_replace(root, '', $start_dir), '/') . '/';
+
+		if ($recursive) {
+			foreach (glob($start_dir . '*', GLOB_ONLYDIR) as $dir) {
+				$matches = array_merge($matches, self::glob_pattern($dir, $match_file_pattern, $recursive));
+			}
+		}
+
+		foreach (glob($start_dir . $match_file_pattern, GLOB_NOSORT) as $file) {
+			$matches[] = $file;
+		}
+
+		return $matches;
+	}
+
+	/**
+	 * @param       $start_dir
+	 * @param array $match_file_extensions
+	 * @param bool  $recursive
+	 * @return array
+	 */
+	public static function glob_extensions($start_dir, array $match_file_extensions, $recursive = true) {
+		$matches = array();
+		$start_dir = rtrim(root . str_replace(root, '', $start_dir), '/') . '/';
+
+		if ($recursive) {
+			foreach (glob($start_dir . '*', GLOB_ONLYDIR) as $dir) {
+				$matches = array_merge($matches, self::glob_extensions($dir, $match_file_extensions, $recursive));
+			}
+		}
+
+		foreach (glob($start_dir . '*.{' . implode(',', $match_file_extensions) . '}', GLOB_BRACE) as $file) {
+			$matches[] = $file;
+		}
+
+		return $matches;
+	}
+
+	/**
 	 * @param $http_code
 	 */
 	public function http_status($http_code) {
