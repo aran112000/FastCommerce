@@ -9,6 +9,8 @@ services:
 
 before_script:
   - mysql -e 'create database ecom;'
+  - mysql -e 'GRANT ALL ON ecom.* TO ecom@localhost IDENTIFIED BY 'p4ssW0rD!';'
+  - mysql -e 'GRANT ALL ON ecom.* TO ecom@127.0.0.1 IDENTIFIED BY 'p4ssW0rD!';'
 
 script:
   #- php index.php
