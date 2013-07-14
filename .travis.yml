@@ -9,9 +9,7 @@ services:
 
 before_script:
   - mysql -e 'create database ecom;'
-  - mysql -e "CREATE USER 'test'@'127.0.0.1' IDENTIFIED BY 'p4ssW0rD!';
-  GRANT USAGE ON *.* TO  'test'@'127.0.0.1' IDENTIFIED BY 'p4ssW0rD!' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
-  GRANT ALL PRIVILEGES ON  `ecom`.* TO 'test'@'127.0.0.1';"
+  - mysql -e "CREATE USER 'test'@'127.0.0.1' IDENTIFIED BY 'p4ssW0rD!'; GRANT USAGE ON *.* TO  'test'@'127.0.0.1' IDENTIFIED BY 'p4ssW0rD!' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; GRANT ALL PRIVILEGES ON  `ecom`.* TO 'test'@'127.0.0.1';"
 
 script:
   #- php index.php
