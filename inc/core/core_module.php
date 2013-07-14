@@ -48,7 +48,7 @@ class core_module extends seo {
 			$this->fields = $this->di->table_cache->get_table_definition($this->table);
 		}
 
-		if (uri == 404) {
+		if (defined('uri') && uri == 404) {
 			$this->di->run->http_status(404);
 			$this->get_view('404');
 		}
