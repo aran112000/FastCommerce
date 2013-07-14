@@ -6,4 +6,4 @@ php:
 
 script: php index.php
 
-script: phpunit --no-globals-backup --static-backup --bootstrap ./tests/_bootstrap.php ./tests/
+script: phpunit --no-globals-backup --static-backup --colors --bootstrap ./tests/_bootstrap.php ./tests/
