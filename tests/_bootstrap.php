@@ -1,5 +1,5 @@
 <?php
-define('root', 'E:\Ecommerce\Ecommerce\\');
+define('root', str_replace('\tests\\', '', end($_SERVER['argv'])));
 define('cms', false);
 
 // Class autoloaders
