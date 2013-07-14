@@ -11,5 +11,5 @@ before_script:
   - mysql -e 'create database ecom;'
 
 script:
-  - php index.php
+  #- php index.php
   - phpunit --no-globals-backup --static-backup --colors --bootstrap ./tests/_bootstrap.php ./tests/

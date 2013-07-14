@@ -12,7 +12,7 @@ spl_autoload_register(function($class) {
 	}
 });
 $di = new di();
-$di->db->import_mysql_tables();
+$di->mock_db->import_mysql_tables();
 spl_autoload_register(function($class) use ($di) {
 
 	// Test case mocks
