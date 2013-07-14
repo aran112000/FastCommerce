@@ -2,6 +2,8 @@
 define('root', (isset($_SERVER['pwd']) ? $_SERVER['pwd'] : str_replace('\tests\\', '', end($_SERVER['argv']))));
 define('cms', false);
 
+echo '<p>ROOT: ' . root . '</p>'."\n";
+
 // Class autoloaders
 spl_autoload_register(function($class) {
 	if (file_exists(root . '/inc/core/' . $class . '.php')) {
