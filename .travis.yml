@@ -6,4 +6,4 @@ php:
 
 script: php index.php
 
-script: phpunit
+script: phpunit ./tests/
