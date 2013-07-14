@@ -1,9 +1,9 @@
 <?php
-define('root', (isset($_SERVER['pwd']) ? $_SERVER['pwd'] : str_replace('\tests\\', '', end($_SERVER['argv']))));
+define('root', (isset($_SERVER['PWD']) ? $_SERVER['PWD'] : str_replace('\tests\\', '', end($_SERVER['argv']))));
 define('cms', false);
 
-echo '<p>ROOT: ' . root . '</p>'."\n";
-echo '<p><pre>' . print_r($_SERVER, true) . '</pre></p>'."\n";
+/*echo '<p>ROOT: ' . root . '</p>'."\n";
+echo '<p><pre>' . print_r($_SERVER, true) . '</pre></p>'."\n";*/
 
 // Class autoloaders
 spl_autoload_register(function($class) {
