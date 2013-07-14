@@ -55,11 +55,15 @@ class core extends dependency {
 	 * Constructor
 	 */
 	public function __init() {
-		if (ajax) {
-			if ($this->di->get->class_exists($_REQUEST['act'])) {
-				$this->di->{$_REQUEST['act']} = $this->di->load_class($_REQUEST['act']);
-				if ($this->di->get->method_exists($this->di->{$_REQUEST['act']}, $_REQUEST['handler'])) {
-					$this->di->{$_REQUEST['act']}->$_REQUEST['handler']();
+		if (defined('ajax') && ajax) {
+			if (!isset($_REQUEST['act']) || !isset($_REQUEST['handler'])) {
+				trigger_error('Please ensure both an act & handler are specific for ajax requests', E_WARNING);
+			} else {
+				if ($this->di->get->class_exists($_REQUEST['act'])) {
+					$this->di->{$_REQUEST['act']} = $this->di->load_class($_REQUEST['act']);
+					if ($this->di->get->method_exists($this->di->{$_REQUEST['act']}, $_REQUEST['handler'])) {
+						return $this->di->{$_REQUEST['act']}->$_REQUEST['handler']();
+					}
 				}
 			}
 		}
@@ -69,7 +73,7 @@ class core extends dependency {
 	 * @return mixed
 	 */
 	protected function get_module_aliases() {
-		return $this->di->get->conf('module_aliases');
+		return $this->di->get->conf('module_aliases', '', array());
 	}
 
 	/**
@@ -418,7 +422,7 @@ $(\'#live_edit_splitter, .vsplitbar\').css({
 	 */
 	public function __destruct() {
 		$this->di->db->close();
-		if (gc_support) {
+		if (defined('gc_support') && gc_support) {
 			gc_collect_cycles();
 		}
 	}
