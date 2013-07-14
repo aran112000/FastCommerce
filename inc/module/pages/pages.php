@@ -2,7 +2,7 @@
 /**
  * Class pages
  */
-final class pages extends core_module {
+class pages extends core_module {
 
 	/**
 	 * @param null $page
