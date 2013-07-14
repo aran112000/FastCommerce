@@ -58,7 +58,7 @@ class ajaxify extends dependency {
 	 *
 	 */
 	public function __destruct() {
-		if (ajax && !empty($this->payload)) {
+		if (defined('ajax') && ajax && !empty($this->payload)) {
 			if (!empty($this->di->core->inline_js)) {
 				$this->payload['script'] = array_merge((isset($this->payload['script']) ? $this->payload['script'] : array()), $this->di->core->inline_js);
 			}
